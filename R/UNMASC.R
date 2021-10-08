@@ -4112,7 +4112,10 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 #' @useDynLib UNMASC
 NULL
 
-
+# Steps to install package from directory
+# 1) Clear NAMESPACE file except first line
+# 2) Rcpp::compileAttributes(pack_dir)
+# 3) devtools::install(pack_dir)
 
 ###
 

@@ -6,28 +6,6 @@
 
 using namespace Rcpp;
 
-// Rcpp_norm
-double Rcpp_norm(const arma::vec& a);
-RcppExport SEXP _UNMASC_Rcpp_norm(SEXP aSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(Rcpp_norm(a));
-    return rcpp_result_gen;
-END_RCPP
-}
-// Rcpp_logSumExp
-double Rcpp_logSumExp(const arma::vec& log_x);
-RcppExport SEXP _UNMASC_Rcpp_logSumExp(SEXP log_xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type log_x(log_xSEXP);
-    rcpp_result_gen = Rcpp::wrap(Rcpp_logSumExp(log_x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // Rcpp_LL
 arma::vec Rcpp_LL(const arma::mat& RD, const arma::vec& DP, const arma::vec& LBC, const double& pi, const double& psi);
 RcppExport SEXP _UNMASC_Rcpp_LL(SEXP RDSEXP, SEXP DPSEXP, SEXP LBCSEXP, SEXP piSEXP, SEXP psiSEXP) {
@@ -40,6 +18,37 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type pi(piSEXP);
     Rcpp::traits::input_parameter< const double& >::type psi(psiSEXP);
     rcpp_result_gen = Rcpp::wrap(Rcpp_LL(RD, DP, LBC, pi, psi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Rcpp_BAF_clust
+Rcpp::List Rcpp_BAF_clust(const arma::mat& RD, const arma::vec& DP, const arma::vec& log_DP, const arma::vec& LBC, const arma::vec& props0, const double& mm0, const double& psi0, const arma::uword& max_iter, const double& eps, const bool& show);
+RcppExport SEXP _UNMASC_Rcpp_BAF_clust(SEXP RDSEXP, SEXP DPSEXP, SEXP log_DPSEXP, SEXP LBCSEXP, SEXP props0SEXP, SEXP mm0SEXP, SEXP psi0SEXP, SEXP max_iterSEXP, SEXP epsSEXP, SEXP showSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type RD(RDSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type DP(DPSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type log_DP(log_DPSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type LBC(LBCSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type props0(props0SEXP);
+    Rcpp::traits::input_parameter< const double& >::type mm0(mm0SEXP);
+    Rcpp::traits::input_parameter< const double& >::type psi0(psi0SEXP);
+    Rcpp::traits::input_parameter< const arma::uword& >::type max_iter(max_iterSEXP);
+    Rcpp::traits::input_parameter< const double& >::type eps(epsSEXP);
+    Rcpp::traits::input_parameter< const bool& >::type show(showSEXP);
+    rcpp_result_gen = Rcpp::wrap(Rcpp_BAF_clust(RD, DP, log_DP, LBC, props0, mm0, psi0, max_iter, eps, show));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Rcpp_logSumExp
+double Rcpp_logSumExp(const arma::vec& log_x);
+RcppExport SEXP _UNMASC_Rcpp_logSumExp(SEXP log_xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type log_x(log_xSEXP);
+    rcpp_result_gen = Rcpp::wrap(Rcpp_logSumExp(log_x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -68,26 +77,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// Rcpp_BAF_clust
-Rcpp::List Rcpp_BAF_clust(const arma::mat& RD, const arma::vec& DP, const arma::vec& log_DP, const arma::vec& LBC, const arma::vec& props0, const double& mm0, const double& psi0, const arma::uword& max_iter, const double& eps, const bool& show);
-RcppExport SEXP _UNMASC_Rcpp_BAF_clust(SEXP RDSEXP, SEXP DPSEXP, SEXP log_DPSEXP, SEXP LBCSEXP, SEXP props0SEXP, SEXP mm0SEXP, SEXP psi0SEXP, SEXP max_iterSEXP, SEXP epsSEXP, SEXP showSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type RD(RDSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type DP(DPSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type log_DP(log_DPSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type LBC(LBCSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type props0(props0SEXP);
-    Rcpp::traits::input_parameter< const double& >::type mm0(mm0SEXP);
-    Rcpp::traits::input_parameter< const double& >::type psi0(psi0SEXP);
-    Rcpp::traits::input_parameter< const arma::uword& >::type max_iter(max_iterSEXP);
-    Rcpp::traits::input_parameter< const double& >::type eps(epsSEXP);
-    Rcpp::traits::input_parameter< const bool& >::type show(showSEXP);
-    rcpp_result_gen = Rcpp::wrap(Rcpp_BAF_clust(RD, DP, log_DP, LBC, props0, mm0, psi0, max_iter, eps, show));
-    return rcpp_result_gen;
-END_RCPP
-}
 // Rcpp_test2
 void Rcpp_test2();
 RcppExport SEXP _UNMASC_Rcpp_test2() {
@@ -99,12 +88,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_UNMASC_Rcpp_norm", (DL_FUNC) &_UNMASC_Rcpp_norm, 1},
-    {"_UNMASC_Rcpp_logSumExp", (DL_FUNC) &_UNMASC_Rcpp_logSumExp, 1},
     {"_UNMASC_Rcpp_LL", (DL_FUNC) &_UNMASC_Rcpp_LL, 5},
+    {"_UNMASC_Rcpp_BAF_clust", (DL_FUNC) &_UNMASC_Rcpp_BAF_clust, 10},
+    {"_UNMASC_Rcpp_logSumExp", (DL_FUNC) &_UNMASC_Rcpp_logSumExp, 1},
     {"_UNMASC_Rcpp_get_target", (DL_FUNC) &_UNMASC_Rcpp_get_target, 3},
     {"_UNMASC_Rcpp_RDQ", (DL_FUNC) &_UNMASC_Rcpp_RDQ, 2},
-    {"_UNMASC_Rcpp_BAF_clust", (DL_FUNC) &_UNMASC_Rcpp_BAF_clust, 10},
     {"_UNMASC_Rcpp_test2", (DL_FUNC) &_UNMASC_Rcpp_test2, 0},
     {NULL, NULL, 0}
 };
