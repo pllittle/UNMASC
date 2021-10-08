@@ -43,11 +43,11 @@ makeRpack::makeRpack(pack_name = pack_name,work_dir = curr_dir,
 	pack_imports = c("data.table","doParallel","foreach","stringr","parallel",
 		"GenomicRanges","IRanges","Rsamtools","emdbook","scales","seqTools"),
 	pack_title = "Tumor-Only Variant Calling with Unmatched Normal Control Samples",
-	pack_author = "Paul Little",
-	pack_email = "plittle@fredhutch.org",
+	pack_author = "Paul Little",pack_email = "plittle@fredhutch.org",
 	pack_desc = "Tumor-only variant calling is conducted through tumor 
 		and unmatched normal annotation, filtering, clustering, and segmentation.",
-	pack_version = pack_version,pandoc_dir = "C:/Program Files/RStudio/bin/pandoc")
+	pack_version = pack_version,
+	CHECK = FALSE,pandoc_dir = "C:/Program Files/RStudio/bin/pandoc")
 }
 
 # vignette(pack_name)
