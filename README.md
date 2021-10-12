@@ -99,8 +99,7 @@ $vep_dir/vep --format vcf --species homo_sapiens \
 
 ```
 
-## Simulated Example
-
+<!---
 ## Output
 
 The column definitions of the sample output `tumorOnly_VCs.tsv` are described using the code below.
@@ -112,4 +111,8 @@ print(UNMASC::readme_VC,right = FALSE)
 
 ## Vignette
 To open the package vignette, run ```vignette("UNMASC")```.
+
+-->
+
+## Frequently Asked Questions
 
