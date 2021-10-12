@@ -5,7 +5,7 @@ This package is designed to filter and annotate tumor-only variant calls through
 Little, L., Jo, H., Hoyle, A., Mazul, A., Zhao, X., Salazar, A.H., Farquhar, D., Sheth, S., Masood, M., Hayward, M.C., Parker, J.S., Hoadley, K.A., Zevallos, J. and Hayes, D.N. (2021). UNMASC: tumor-only variant calling with unmatched normal controls. *NAR Cancer*, 3(4), zcab040. [[HTML](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329), [PDF](https://academic.oup.com/narcancer/article-pdf/3/4/zcab040/40514892/zcab040.pdf)]
 
 ## Installation
-```{r}
+```
 library(devtools)
 
 # Check dependencies
@@ -35,7 +35,7 @@ if( !("UNMASC" %in% all_packs) )
 
 UNMASC's benchmark samples were run with Strelka. Assuming [Strelka](https://sites.google.com/site/strelkasomaticvariantcaller/)/[Strelka2](https://github.com/Illumina/strelka), [GATK](https://github.com/broadinstitute/gatk), and [VEP](https://uswest.ensembl.org/info/docs/tools/vep/index.html) are installed along with corresponding dependencies, Linux commands are provided below to run Strelka, Strelka2, GATK and VEP for variant calling and annotation. Running our VEP annotation requires downloading a COSMIC database VCF. For example, CosmicCodingMuts.vcf.gz for GRCh37 with the latest release can be found at [here](https://cancer.sanger.ac.uk/cosmic/download?genome=37). We've instructed VEP to annotate variants with 1000 Genomes population allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, impacts/consequences, and COSMIC counts with legacy IDs.
 
-```
+```bash
 # ----------
 # Directories and filenames
 # ----------
