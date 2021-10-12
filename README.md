@@ -5,7 +5,7 @@ This package is designed to filter and annotate tumor-only variant calls through
 Little, L., Jo, H., Hoyle, A., Mazul, A., Zhao, X., Salazar, A.H., Farquhar, D., Sheth, S., Masood, M., Hayward, M.C., Parker, J.S., Hoadley, K.A., Zevallos, J. and Hayes, D.N. (2021). UNMASC: tumor-only variant calling with unmatched normal controls. *NAR Cancer*, 3(4), zcab040. [[HTML](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329), [PDF](https://academic.oup.com/narcancer/article-pdf/3/4/zcab040/40514892/zcab040.pdf)]
 
 ## Installation
-```
+```{r}
 library(devtools)
 
 # Check dependencies
