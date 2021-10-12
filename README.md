@@ -2,23 +2,38 @@
 This package is designed to filter and annotate tumor-only variant calls through the integration of public database annotations, clustering, and segmentation to provide the user with a clear characterization of each variant when called against a set of unmatched normal controls.
 
 ## Citation
-Little, L., Jo, H., Hoyle, A., Mazul, A., Zhao, X., Salazar, A.H., Farquhar, D., Sheth, S., Masood, M., Hayward, M.C., Parker, J.S., Hoadley, K.A., Zevallos, J., and Hayes, D.N. (2021). UNMASC: tumor-only variant calling with unmatched normal controls. *NAR Cancer*, 3(4). [HTML](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329), [PDF](https://academic.oup.com/narcancer/article-pdf/3/4/zcab040/40514892/zcab040.pdf)
+Little, L., Jo, H., Hoyle, A., Mazul, A., Zhao, X., Salazar, A.H., Farquhar, D., Sheth, S., Masood, M., Hayward, M.C., Parker, J.S., Hoadley, K.A., Zevallos, J. and Hayes, D.N. (2021). UNMASC: tumor-only variant calling with unmatched normal controls. *NAR Cancer*, 3(4), zcab040. [[HTML](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329), [PDF](https://academic.oup.com/narcancer/article-pdf/3/4/zcab040/40514892/zcab040.pdf)]
 
 ## Installation
 ```
 library(devtools)
-devtools::install_github("pllittle/UNMASC")
+
+# Check dependencies
+all_packs = as.character(installed.packages()[,1])
+req_packs = c("Rcpp","RcppArmadillo","emdbook",
+	"scales","seqTools","parallel","doParallel",
+	"data.table","grDevices","Rsamtools","GenomicRanges",
+	"IRanges","foreach")
+if( !all(req_packs %in% all_packs) ){
+	miss_packs = req_packs[!(req_packs %in% all_packs)]
+	stop(sprintf("Missing package(s): %s",paste(miss_packs,collapse = ",")))
+}
+
+# UNMASC
+if( !("UNMASC" %in% all_packs) )
+	devtools::install_github("pllittle/UNMASC")
 ```
 
 ## UNMASC inputs
 
 * Annotated variant calls (e.g. Strelka/Strelka2 + VEP)
 * Target capture bed file
+* Centromere start/end bed file
 * Tumor bam filename
 
 ## Workflow template code for UNMASC inputs
 
-UNMASC's benchmark samples were run with Strelka. Assuming Strelka/Strelka2, GATK, and VEP are installed along with corresponding dependencies, Linux commands are provided below to run Strelka, Strelka2, GATK and VEP for variant calling and annotation. Running our VEP annotation requires downloading a COSMIC database VCF. For example, CosmicCodingMuts.vcf.gz for GRCh37 with the latest release can be found at https://cancer.sanger.ac.uk/cosmic/download?genome=37. We've instructed VEP to annotate variants with 1000 Genomes population allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, impacts/consequences, and COSMIC counts with legacy IDs.
+UNMASC's benchmark samples were run with Strelka. Assuming Strelka/Strelka2, GATK, and VEP are installed along with corresponding dependencies, Linux commands are provided below to run Strelka, Strelka2, GATK and VEP for variant calling and annotation. Running our VEP annotation requires downloading a COSMIC database VCF. For example, CosmicCodingMuts.vcf.gz for GRCh37 with the latest release can be found at [here](https://cancer.sanger.ac.uk/cosmic/download?genome=37). We've instructed VEP to annotate variants with 1000 Genomes population allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, impacts/consequences, and COSMIC counts with legacy IDs.
 
 ```
 # ----------
