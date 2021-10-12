@@ -1,10 +1,13 @@
 # UNMASC - Unmatched Normals and Mutant Allele Status Characterization
 This package is designed to filter and annotate tumor-only variant calls through the integration of public database annotations, clustering, and segmentation to provide the user with a clear characterization of each variant when called against a set of unmatched normal controls.
 
+## Citation
+Little, L., Jo, H., Hoyle, A., Mazul, A., Zhao, X., Salazar, A.H., Farquhar, D., Sheth, S., Masood, M., Hayward, M.C., Parker, J.S., Hoadley, K.A., Zevallos, J., and Hayes, D.N. (2021). UNMASC: tumor-only variant calling with unmatched normal controls. *NAR Cancer*, 3(4). [HTML](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329), [PDF](https://academic.oup.com/narcancer/article-pdf/3/4/zcab040/40514892/zcab040.pdf)
+
 ## Installation
 ```
 library(devtools)
-install_github("pllittle/UNMASC")
+devtools::install_github("pllittle/UNMASC")
 ```
 
 ## UNMASC inputs
