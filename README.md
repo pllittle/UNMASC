@@ -33,7 +33,7 @@ if( !("UNMASC" %in% all_packs) )
 
 ## Workflow template code for UNMASC inputs
 
-UNMASC's benchmark samples were run with Strelka. Assuming Strelka/Strelka2, GATK, and VEP are installed along with corresponding dependencies, Linux commands are provided below to run Strelka, Strelka2, GATK and VEP for variant calling and annotation. Running our VEP annotation requires downloading a COSMIC database VCF. For example, CosmicCodingMuts.vcf.gz for GRCh37 with the latest release can be found at [here](https://cancer.sanger.ac.uk/cosmic/download?genome=37). We've instructed VEP to annotate variants with 1000 Genomes population allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, impacts/consequences, and COSMIC counts with legacy IDs.
+UNMASC's benchmark samples were run with Strelka. Assuming [Strelka](https://sites.google.com/site/strelkasomaticvariantcaller/)/[Strelka2](https://github.com/Illumina/strelka), [GATK](https://github.com/broadinstitute/gatk), and [VEP](https://uswest.ensembl.org/info/docs/tools/vep/index.html) are installed along with corresponding dependencies, Linux commands are provided below to run Strelka, Strelka2, GATK and VEP for variant calling and annotation. Running our VEP annotation requires downloading a COSMIC database VCF. For example, CosmicCodingMuts.vcf.gz for GRCh37 with the latest release can be found at [here](https://cancer.sanger.ac.uk/cosmic/download?genome=37). We've instructed VEP to annotate variants with 1000 Genomes population allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, impacts/consequences, and COSMIC counts with legacy IDs.
 
 ```
 # ----------
