@@ -4114,8 +4114,10 @@ NULL
 
 # Steps to install package from directory
 # 1) Clear NAMESPACE file except first line
-# 2) Rcpp::compileAttributes(pack_dir)
-# 3) devtools::install(pack_dir)
+# bb = strsplit(getwd(),"/")[[1]]; pack_dir = paste(bb[-length(bb)],collapse = "/")
+# 2) Rcpp::compileAttributes(pkgdir = pack_dir)
+# 3) devtools::document(pkg = pack_dir)
+# 4) devtools::install(pack_dir)
 
 ###
 
