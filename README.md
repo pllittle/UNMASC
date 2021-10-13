@@ -1,8 +1,23 @@
 # UNMASC - Unmatched Normals and Mutant Allele Status Characterization
+
+## What is for?
+
+One goal of cancer genomics is to identify DNA variants specific to the cancer tissue within an individual. Perhaps a researcher would like to identify mutated genes and design a cancer treatment or therapy specific to that individual's cancer. These cancer variants are considered **somatic** or variants that cannot be inherited. Our normal tissue harbors inherited DNA variants called  **germline** variants that are present and identical across all normal tissue. 
+
+If one sequences an individual's matched normal DNA (e.g. from blood or adjacent tissue) and tumor DNA, one can identify both **germline** and **somatic** mutations and more importantly, distinguish between them. However, without the matched normal DNA serving as a control, the performance of somatic mutation callers (MuTect2, Seurat, Indelocator, Varscan, Strelka, Strelka2, etc.) drops off in terms of recall (sensitivity) and precision (positive predictive value). Perhaps the tumor sample:
+
+* lacks an available matched normal (e.g. patient is unavailable, has leukemia)
+* sample contamination, poorly sequenced normal, 
+* insufficient budget to sequence both samples per patient
+
+A third set of detected and unavoidable variants are false positives or **artifacts** that can arise from several sources including poor sequencing, sample storage, read misalignment to the reference genome, etc. UNMASC attempts to identify somatic variants from tumor samples without an adequate matched normal.
+
+## Description
+
 This package is designed to filter and annotate tumor-only variant calls through the integration of public database annotations, clustering, and segmentation to provide the user with a clear characterization of each variant when called against a set of unmatched normal controls.
 
 ## Citation
-Little, L., Jo, H., Hoyle, A., Mazul, A., Zhao, X., Salazar, A.H., Farquhar, D., Sheth, S., Masood, M., Hayward, M.C., Parker, J.S., Hoadley, K.A., Zevallos, J. and Hayes, D.N. (2021). UNMASC: tumor-only variant calling with unmatched normal controls. *NAR Cancer*, 3(4), zcab040. [[HTML](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329), [PDF](https://academic.oup.com/narcancer/article-pdf/3/4/zcab040/40514892/zcab040.pdf)]
+Little, P., Jo, H., Hoyle, A., Mazul, A., Zhao, X., Salazar, A.H., Farquhar, D., Sheth, S., Masood, M., Hayward, M.C., Parker, J.S., Hoadley, K.A., Zevallos, J. and Hayes, D.N. (2021). UNMASC: tumor-only variant calling with unmatched normal controls. *NAR Cancer*, 3(4), zcab040. [[HTML](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329), [PDF](https://academic.oup.com/narcancer/article-pdf/3/4/zcab040/40514892/zcab040.pdf)]
 
 ## Installation
 ```
@@ -33,7 +48,7 @@ if( !("UNMASC" %in% all_packs) )
 
 ## Workflow template code for UNMASC inputs
 
-UNMASC's benchmark samples were run with Strelka. Assuming [Strelka](https://sites.google.com/site/strelkasomaticvariantcaller/)/[Strelka2](https://github.com/Illumina/strelka), [GATK](https://github.com/broadinstitute/gatk), and [VEP](https://uswest.ensembl.org/info/docs/tools/vep/index.html) are installed along with corresponding dependencies, Linux commands are provided below to run Strelka, Strelka2, GATK and VEP for variant calling and annotation. Running our VEP annotation requires downloading a COSMIC database VCF. For example, CosmicCodingMuts.vcf.gz for GRCh37 with the latest release can be found at [here](https://cancer.sanger.ac.uk/cosmic/download?genome=37). We've instructed VEP to annotate variants with 1000 Genomes population allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, impacts/consequences, and COSMIC counts with legacy IDs.
+UNMASC's benchmark samples were run with Strelka. Assuming [Strelka](https://sites.google.com/site/strelkasomaticvariantcaller/)/[Strelka2](https://github.com/Illumina/strelka), [GATK](https://github.com/broadinstitute/gatk), and [VEP](https://uswest.ensembl.org/info/docs/tools/vep/index.html) are installed along with corresponding dependencies (Perl, HTSlib, etc.), Linux commands are provided below to run these software for variant calling and annotation. Running our customized VEP annotation requires downloading a COSMIC database VCF. For example, CosmicCodingMuts.vcf.gz for GRCh37 with the latest release can be found at [here](https://cancer.sanger.ac.uk/cosmic/download?genome=37). We have instructed VEP to annotate variants with 1000 Genomes population allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, impacts/consequences, and COSMIC counts with legacy IDs.
 
 ```bash
 # ----------
