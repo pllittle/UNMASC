@@ -2240,7 +2240,7 @@ new_STRAND = function(BAM_fn,vcs,minBQ = 13,minMQ = 40,NT = 1){
 	}
 	
 	vcs = unique(vcs[,c("mutID","Chr","Position","Ref","Alt")])
-	cat(sprintf("Total number of loci for strand = %s\n",nrow(vcs)))
+	cat(sprintf("%s: Total number of loci for strand = %s\n",date(),nrow(vcs)))
 	bf = BamFile(BAM_fn)
 	p_param = PileupParam(max_depth = 1e4,
 		min_base_quality = minBQ,min_mapq = minMQ,
