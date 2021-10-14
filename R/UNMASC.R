@@ -3470,7 +3470,7 @@ UNMASC_definitions = function(headers = NULL){
 	readme_VC = rbind(readme_VC,smart_df(VAR="ThsdG_AF",DEF="1000 Genomes population allele frequency"))
 	readme_VC = rbind(readme_VC,smart_df(VAR="EXAC_AF",DEF="ExAC population allele frequency"))
 	readme_VC = rbind(readme_VC,smart_df(VAR="snpEff",DEF="snpEff annotation"))
-	readme_VC = rbind(readme_VC,smart_df(VAR="snpEffImpact",DEF="worst case snpEff Impact Prediction"))
+	readme_VC = rbind(readme_VC,smart_df(VAR="IMPACT",DEF="worst case snpEff Impact Prediction"))
 	readme_VC = rbind(readme_VC,smart_df(VAR="gc",DEF="GC Content"))
 	readme_VC = rbind(readme_VC,smart_df(VAR="ref_context",DEF="Genomic sequence at variant locus with additional 10 bp of flanking sequence on either side"))
 	readme_VC = rbind(readme_VC,smart_df(VAR="tRD",DEF="Tumor Reference read depth"))
@@ -3835,12 +3835,13 @@ TO_genotype = function(vcf,outdir,hg,genome,strand,
 #'	containing "Chr" (e.g. 'chr1'), "Position" (e.g. 1000), "Ref" (e.g. "A"), 
 #'	"Alt" (e.g. "T"), "Qscore" (e.g. 30), "GeneName" (e.g. 'TP53'),
 #'	"TARGET" (e.g. 'YES', 'NO'), "EXONIC" (e.g. 'YES', 'NO'), 
+#'	"IMPACT" (e.g. 'MODIFIER','LOW','MODERATE','HIGH'),
 #'	"STUDYNUMBER" (e.g. "normal_1"), "CosmicOverlaps" (e.g. 10), "ThsdG_AF" (e.g. 0.5), 
 #'	"EXAC_AF" (e.g. 0.1), "nAD" (e.g. 10), "nRD" (e.g. 20), 
 #'	"tAD" (e.g. 10), "tRD" (e.g. 20) columns corresponding to 
 #'	chromosome, position, reference allele, alternate allele,
 #'	variant quality score, Hugo symbol, on/off target status,
-#'	exonic/intronic status, normal control ID, number of COSMIC overlaps,
+#'	exonic/intronic status, snpEff impact, normal control ID, number of COSMIC overlaps,
 #'	1000 Genomes population allele frequency, ExAC population allele frequency,
 #'	control alternate depth, control reference depth, tumor alternate depth,
 #'	tumor reference depth, respectively.
@@ -3908,7 +3909,7 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 	if( !file.exists(image_fn) ){
 		# Checking required inputs
 		req_COLS = c("Chr","Position","Ref","Alt","Qscore",
-			"GeneName","TARGET","EXONIC","STUDYNUMBER",
+			"GeneName","TARGET","EXONIC","IMPACT","STUDYNUMBER",
 			"CosmicOverlaps","ThsdG_AF","EXAC_AF",
 			"nAD","nRD","tAD","tRD")
 		smart_header(OBJ = vcf,req_COLS = req_COLS)
@@ -4061,7 +4062,7 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 	# intron_syn_label[which(grepl("SYNONYMOUS",fNPN$snpEff_pt1))] = TRUE
 	# table(intron_syn_label)
 	# intron_syn_label 	= fNPN$O_Effect2 %in% c("INTRON","SYNONYMOUS_CODING")
-	mod_label					= fNPN$snpEffImpact %in% c("MODIFIER")
+	mod_label					= fNPN$IMPACT %in% c("MODIFIER")
 	h2m_label 				= !is.na(fNPN$N_eps) & ( fNPN$N_eps >= eps_thres | fNPN$N_PSI >= psi_thres )
 	strand_label 			= !is.na(fNPN$Strand_bias_P) & fNPN$Strand_bias_P < 0.05
 	germ_label 				= !is.na(fNPN$tANNO) & fNPN$tANNO < 0.5
