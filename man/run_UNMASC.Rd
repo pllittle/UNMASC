@@ -38,12 +38,13 @@ file, this can be set to \code{NULL}. Otherwise, it is a dataframe
 containing "Chr" (e.g. 'chr1'), "Position" (e.g. 1000), "Ref" (e.g. "A"), 
 "Alt" (e.g. "T"), "Qscore" (e.g. 30), "GeneName" (e.g. 'TP53'),
 "TARGET" (e.g. 'YES', 'NO'), "EXONIC" (e.g. 'YES', 'NO'), 
+"IMPACT" (e.g. 'MODIFIER','LOW','MODERATE','HIGH'),
 "STUDYNUMBER" (e.g. "normal_1"), "CosmicOverlaps" (e.g. 10), "ThsdG_AF" (e.g. 0.5), 
 "EXAC_AF" (e.g. 0.1), "nAD" (e.g. 10), "nRD" (e.g. 20), 
 "tAD" (e.g. 10), "tRD" (e.g. 20) columns corresponding to 
 chromosome, position, reference allele, alternate allele,
 variant quality score, Hugo symbol, on/off target status,
-exonic/intronic status, normal control ID, number of COSMIC overlaps,
+exonic/intronic status, snpEff impact, normal control ID, number of COSMIC overlaps,
 1000 Genomes population allele frequency, ExAC population allele frequency,
 control alternate depth, control reference depth, tumor alternate depth,
 tumor reference depth, respectively.}
