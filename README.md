@@ -129,5 +129,12 @@ To open the package vignette, run ```vignette("UNMASC")```.
 
 -->
 
-## Frequently Asked Questions
+## Future directions
+
+* Applying UNMASC toward circulating plasma tumor cell DNA
+* Identifying somatic mutations missed by tumors with matched normals
+
+## FAQs
+
+
 
