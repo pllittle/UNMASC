@@ -340,6 +340,11 @@ Rcpp::List Rcpp_BAF_clust(const arma::mat& RD,const arma::vec& DP,
 		old_LL = Rcpp_BAF_LL_Z(RD,DP,log_DP,LBC,BB,I_np,Z,props,mm,psi,show);
 		if( props.at(0) == 1.0 ) psi = 0.0;
 		
+		if( props.at(0) == 0.0 && psi > 0.0 ){
+			return Rcpp_BAF_clust(RD,DP,log_DP,LBC,props0,mm0,0.0,
+				max_iter,eps,show);
+		}
+		
 		// Calculate model size
 		ms = arma::sum( props > 0.0 ) - 1; 							// number of mix props > 0
 		ms += 1 * ( props.at(0) > 0.0 );								// account for noise distribution
