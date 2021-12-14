@@ -114,6 +114,42 @@ $vep_dir/vep --format vcf --species homo_sapiens \
 
 ```
 
+## Run UNMASC
+
+Template code to run UNMASC
+
+```
+# Example Inputs
+tumorID = "tumor01"
+outdir 	= file.path(".",tumorID)
+vcf			= <a data.frame of required column names, refer to documentation>
+tBAM_fn = "path/to/tumor/bam"
+bed_centromere_fn = "path/to/centromere/start/end/bed/file"
+dict_chrom_fn = "path/to/chromosome/length/file"
+qscore_thres = 30 # Qscore threshold
+exac_thres = 5e-3 # ExAC population allele frequency threshold for germline filtering
+ad_thres = 5
+rd_thres = 10
+cut_BAF = 5e-2
+minBQ = 13
+minMQ = 40
+eps_thres = 0.5
+psi_thres = 0.02
+hg = "19"
+binom = TRUE
+gender = NA
+ncores = 1 # number of threads/cores available
+
+# Package main function
+UNMASC::run_UNMASC(tumorID = tumorID,outdir = outdir,
+	vcf = vcf,tBAM_fn = tBAM_fn,bed_centromere_fn = bed_centromere_fn,
+	dict_chrom_fn = dict_chrom_fn,qscore_thres = qscore_thres,
+	exac_thres = exac_thres,ad_thres = ad_thres,rd_thres = rd_thres,
+	cut_BAF = cut_BAF,minBQ = minBQ,minMQ = minMQ,eps_thres = eps_thres,
+	psi_thres = psi_thres,hg = "19",binom = binom,gender = gender,
+	ncores = ncores)
+```
+
 <!---
 ## Output
 
