@@ -1,55 +1,12 @@
 # Smart Functions
-smart_df = function(...){
-	data.frame(...,stringsAsFactors=FALSE)
-}
-smart_merge = function(x,y,mess=NULL,...){
-	if( !is.null(mess) ){
-		intersect_vars = paste(intersect(names(x),names(y)),collapse=", ")
-		cat(paste0("Merging dataframes on variables = { ",intersect_vars," }\n"))
-	}
-	
-	merge(x,y,by=intersect(names(x),names(y)),...)
-}
-smart_table = function(...){
-	table(...,useNA='ifany')
-}
 smart_uniq_df = function(input_df,vars){
 	input_df[!duplicated(input_df[,vars]),]
-}
-smart_hist = function(x,dens=TRUE,...){
-	hist(x,col="steelblue",freq=FALSE,...)
-	if( dens ) lines(density(x,na.rm=TRUE),lwd=1.5,lty=2,col="red")
-}
-smart_WT = function(...){
-	write.table(...,row.names=FALSE,quote=FALSE)
-}
-name_change = function(DATA,ORIG_NAME,NEW_NAME){
-	new_index = which(names(DATA) == NEW_NAME)
-	if( length(new_index) > 0 ){
-		DATA = DATA[,-new_index]
-	}
-	index = which(names(DATA) == ORIG_NAME)
-	names(DATA)[index] = NEW_NAME
-	DATA
-}
-smart_rmcols = function(OBJ,rm_names){
-	rm_names = intersect(rm_names,colnames(OBJ))
-	if( length(rm_names) > 0 ){
-		OBJ[,!(colnames(OBJ) %in% rm_names)]
-	} else {
-		OBJ
-	}
 }
 smart_sprintf = function(...){
 	orig = sprintf(...)
 	orig = gsub("\n","",orig)
 	orig = gsub("\t","",orig)
 	orig
-}
-smart_mkdir = function(input_dir){
-	if( !file.exists(input_dir) || !dir.exists(input_dir) ){
-		dir.create(input_dir)
-	}
 }
 smart_header = function(OBJ,req_COLS){
 	for(COL in req_COLS){
@@ -3455,8 +3412,6 @@ simulate_BAF = function(num_segs = 2,mean_depth = 300,max_PSI = 0,
 #'	\code{headers = NULL}, in which all available header definitions 
 #'	are printed. If a subset of headers are specified, only the subset 
 #'	of header definitions are printed.
-#' @example
-#'	UNMASC_definitions(headers = c("tVAF","N_eps"))
 #' @export
 UNMASC_definitions = function(headers = NULL){
 	readme_VC = c()
@@ -3877,7 +3832,6 @@ TO_genotype = function(vcf,outdir,hg,genome,strand,
 #'	is also segmented.
 #' @param ncores A positive integer for the number of threads to 
 #'	use for calculating strand-specific read counts.
-#'
 #' @export
 run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_chrom_fn,
 	qscore_thres = 30,exac_thres = 5e-3,ad_thres = 5,rd_thres = 10,cut_BAF = 5e-2,
@@ -4094,11 +4048,15 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 }
 
 
-
+#' @importFrom smartr smart_df smart_table smart_merge
+#'	smart_mkdir smart_hist smart_rmcols name_change
+#'	smart_WT
 #' @importFrom Rcpp sourceCpp
 #' @importFrom emdbook rbetabinom
-#' @importFrom stats rbinom runif density chisq.test fisher.test var quantile sd rnbinom
-#' @importFrom graphics par plot hist lines axis segments polygon abline legend points
+#' @importFrom stats rbinom runif density chisq.test 
+#'	fisher.test var quantile sd rnbinom
+#' @importFrom graphics par plot hist lines axis segments
+#'	polygon abline legend points
 #' @importFrom utils head tail read.table write.table
 #' @importFrom scales hue_pal
 #' @importFrom seqTools char2ascii
@@ -4113,12 +4071,19 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 #' @useDynLib UNMASC
 NULL
 
-# Steps to install package from directory
-# 1) Clear NAMESPACE file except first line
+# Steps to create/check/install package from directory
 # bb = strsplit(getwd(),"/")[[1]]; pack_dir = paste(bb[-length(bb)],collapse = "/")
-# 2) Rcpp::compileAttributes(pkgdir = pack_dir)
-# 3) devtools::document(pkg = pack_dir)
-# 4) devtools::install(pack_dir)
+# pack = strsplit(pack_dir,"/")[[1]]; pack = pack[length(pack)]
+# if( pack %in% installed.packages()[,1] ){ remove.packages(pack); q("no")}
+# Rcpp::compileAttributes(pkgdir = pack_dir)
+# devtools::document(pkg = pack_dir); usethis::use_gpl3_license()
+# Sys.setenv("RSTUDIO_PANDOC" = "C:/Program Files/RStudio/bin/pandoc")
+# check_pandoc = rmarkdown::pandoc_available(); check_pandoc
+#### usethis::use_vignette(name = "test",title = "Testing")
+# make_vignette = FALSE
+# devtools::check(pkg = pack_dir,manual = TRUE,cran = FALSE,error_on = c("warning","note")[1],vignettes = make_vignette)
+# devtools::install(pack_dir,build_vignettes = make_vignette)
+
 
 ###
 

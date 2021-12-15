@@ -82,15 +82,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// Rcpp_test2
-void Rcpp_test2();
-RcppExport SEXP _UNMASC_Rcpp_test2() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp_test2();
-    return R_NilValue;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_UNMASC_Rcpp_LL", (DL_FUNC) &_UNMASC_Rcpp_LL, 5},
@@ -98,7 +89,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_UNMASC_Rcpp_logSumExp", (DL_FUNC) &_UNMASC_Rcpp_logSumExp, 1},
     {"_UNMASC_Rcpp_get_target", (DL_FUNC) &_UNMASC_Rcpp_get_target, 3},
     {"_UNMASC_Rcpp_RDQ", (DL_FUNC) &_UNMASC_Rcpp_RDQ, 2},
-    {"_UNMASC_Rcpp_test2", (DL_FUNC) &_UNMASC_Rcpp_test2, 0},
     {NULL, NULL, 0}
 };
 

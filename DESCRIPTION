@@ -9,9 +9,9 @@ Description: Tumor-only variant calling is conducted through tumor and
         unmatched normal annotation, filtering, clustering, and
         segmentation.
 Encoding: UTF-8
-Imports: data.table, doParallel, foreach, stringr, parallel,
+Imports: smartr, data.table, doParallel, foreach, parallel,
         GenomicRanges, IRanges, Rsamtools, emdbook, scales, seqTools,
         Rcpp
 LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 3)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

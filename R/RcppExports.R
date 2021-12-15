@@ -21,7 +21,3 @@ Rcpp_RDQ <- function(RDQ, qq = 0.25) {
     .Call('_UNMASC_Rcpp_RDQ', PACKAGE = 'UNMASC', RDQ, qq)
 }
 
-Rcpp_test2 <- function() {
-    invisible(.Call('_UNMASC_Rcpp_test2', PACKAGE = 'UNMASC'))
-}
-
