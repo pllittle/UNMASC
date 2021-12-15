@@ -20,12 +20,13 @@ This package is designed to filter and annotate tumor-only variant calls through
 Little, P., Jo, H., Hoyle, A., Mazul, A., Zhao, X., Salazar, A.H., Farquhar, D., Sheth, S., Masood, M., Hayward, M.C., Parker, J.S., Hoadley, K.A., Zevallos, J. and Hayes, D.N. (2021). UNMASC: tumor-only variant calling with unmatched normal controls. *NAR Cancer*, 3(4), zcab040. [[HTML](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329), [PDF](https://academic.oup.com/narcancer/article-pdf/3/4/zcab040/40514892/zcab040.pdf)]
 
 ## Installation
+
 ```
 library(devtools)
 
 # Check dependencies
 all_packs = as.character(installed.packages()[,1])
-req_packs = c("Rcpp","RcppArmadillo","emdbook",
+req_packs = c("smartr","Rcpp","RcppArmadillo","emdbook",
 	"scales","seqTools","parallel","doParallel",
 	"data.table","grDevices","Rsamtools","GenomicRanges",
 	"IRanges","foreach")
