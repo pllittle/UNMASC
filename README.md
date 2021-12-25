@@ -51,7 +51,7 @@ if( !("UNMASC" %in% all_packs) )
 
 UNMASC's benchmark samples were run with Strelka. Assuming [Strelka](https://sites.google.com/site/strelkasomaticvariantcaller/)/[Strelka2](https://github.com/Illumina/strelka), [GATK](https://github.com/broadinstitute/gatk), and [VEP](https://uswest.ensembl.org/info/docs/tools/vep/index.html) are installed along with corresponding dependencies (Perl, HTSlib, etc.), Linux commands are provided below to run these software for variant calling and annotation. Running our customized VEP annotation requires downloading a COSMIC database VCF. For example, CosmicCodingMuts.vcf.gz for GRCh37 with the latest release can be found at [here](https://cancer.sanger.ac.uk/cosmic/download?genome=37). We have instructed VEP to annotate variants with 1000 Genomes population allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, impacts/consequences, and COSMIC counts with legacy IDs.
 
-```bash
+```Shell
 # ----------
 # Directories and filenames
 # ----------
@@ -119,7 +119,7 @@ $vep_dir/vep --format vcf --species homo_sapiens \
 
 Template code to run UNMASC
 
-```
+```R
 # Example Inputs
 tumorID = "tumor01"
 outdir 	= file.path(".",tumorID)
