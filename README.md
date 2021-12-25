@@ -21,7 +21,7 @@ Little, P., Jo, H., Hoyle, A., Mazul, A., Zhao, X., Salazar, A.H., Farquhar, D.,
 
 ## Installation
 
-```
+```R
 library(devtools)
 
 # Check dependencies
