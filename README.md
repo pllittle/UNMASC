@@ -17,7 +17,7 @@ A third set of detected and unavoidable variants are false positives or **artifa
 This package is designed to filter and annotate tumor-only variant calls through the integration of public database annotations, clustering, and segmentation to provide the user with a clear characterization of each variant when called against a set of unmatched normal controls.
 
 ## Citation
-Little, P., Jo, H., Hoyle, A., Mazul, A., Zhao, X., Salazar, A.H., Farquhar, D., Sheth, S., Masood, M., Hayward, M.C., Parker, J.S., Hoadley, K.A., Zevallos, J. and Hayes, D.N. (2021). UNMASC: tumor-only variant calling with unmatched normal controls. *NAR Cancer*, 3(4), zcab040. [[HTML](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329), [PDF](https://academic.oup.com/narcancer/article-pdf/3/4/zcab040/40514892/zcab040.pdf)]
+Little, P., Jo, H., Hoyle, A., Mazul, A., Zhao, X., Salazar, A.H., Farquhar, D., Sheth, S., Masood, M., Hayward, M.C., Parker, J.S., Hoadley, K.A., Zevallos, J. and Hayes, D.N. (2021). UNMASC: tumor-only variant calling with unmatched normal controls. *NAR Cancer*, 3(4), zcab040. [[HTML](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329), [PDF](https://academic.oup.com/narcancer/article-pdf/3/4/zcab040/40514892/zcab040.pdf), [Supplement](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329#supplementary-data)]
 
 ## Installation
 
@@ -115,6 +115,15 @@ $vep_dir/vep --format vcf --species homo_sapiens \
 
 ```
 
+## Prepare UNMASC's annotated VCF
+
+02/15/2022: Code below will import merged Strelka2 vcfs, VEP annotation vcf, and target bed file to prepare UNMASC's main `vcf` input R data.frame.
+
+```R
+vcf = prep_UNMASC_VCF(outdir,DAT,FILTER,
+	target_fn,anno_fn,ncores)
+```
+
 ## Run UNMASC
 
 Template code to run UNMASC
@@ -123,7 +132,7 @@ Template code to run UNMASC
 # Example Inputs
 tumorID = "tumor01"
 outdir 	= file.path(".",tumorID)
-vcf			= <a data.frame of required column names, refer to documentation>
+vcf     = <a data.frame of required column names, refer to documentation>
 tBAM_fn = "path/to/tumor/bam"
 bed_centromere_fn = "path/to/centromere/start/end/bed/file"
 dict_chrom_fn = "path/to/chromosome/length/file"
@@ -168,6 +177,7 @@ To open the package vignette, run ```vignette("UNMASC")```.
 
 ## Future directions
 
+* Workflow containers
 * Applying UNMASC toward circulating plasma tumor cell DNA
 * Identifying somatic mutations missed by tumors with matched normals
 
