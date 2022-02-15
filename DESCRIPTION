@@ -2,7 +2,7 @@ Package: UNMASC
 Type: Package
 Title: Tumor-Only Variant Calling with Unmatched Normal Control Samples
 Version: 1.0.0
-Date: 2021-10-07
+Date: 2022-02-15
 Author: Paul Little
 Maintainer: Paul Little <plittle@fredhutch.org>
 Description: Tumor-only variant calling is conducted through tumor and

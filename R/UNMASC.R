@@ -4050,7 +4050,7 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 
 #' @importFrom smartr smart_df smart_table smart_merge
 #'	smart_mkdir smart_hist smart_rmcols name_change
-#'	smart_WT
+#'	smart_WT smart_progress smart_reqNames
 #' @importFrom Rcpp sourceCpp
 #' @importFrom emdbook rbetabinom
 #' @importFrom stats rbinom runif density chisq.test 
@@ -4081,7 +4081,7 @@ NULL
 # check_pandoc = rmarkdown::pandoc_available(); check_pandoc
 #### usethis::use_vignette(name = "test",title = "Testing")
 # make_vignette = FALSE
-# devtools::check(pkg = pack_dir,manual = TRUE,cran = FALSE,error_on = c("warning","note")[1],vignettes = make_vignette)
+# devtools::check(pkg = pack_dir,manual = TRUE,cran = !FALSE,error_on = c("warning","note")[1],vignettes = make_vignette)
 # devtools::install(pack_dir,build_vignettes = make_vignette)
 
 
