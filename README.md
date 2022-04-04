@@ -21,23 +21,43 @@ Little, P., Jo, H., [Hoyle, A.](https://github.com/alanhoyle), Mazul, A., [Zhao,
 
 ## Installation
 
-```R
-library(devtools)
+R/RStudio code to check, install, and load libraries.
 
-# Check dependencies
-all_packs = as.character(installed.packages()[,1])
-req_packs = c("smartr","Rcpp","RcppArmadillo","emdbook",
-	"scales","seqTools","parallel","doParallel",
+```R
+req_packs = c("devtools","smartr","Rcpp","RcppArmadillo","emdbook",
+	"scales","BiocManager","seqTools","parallel","doParallel",
 	"data.table","grDevices","Rsamtools","GenomicRanges",
-	"IRanges","foreach")
-if( !all(req_packs %in% all_packs) ){
-	miss_packs = req_packs[!(req_packs %in% all_packs)]
-	stop(sprintf("Missing package(s): %s",paste(miss_packs,collapse = ",")))
+	"IRanges","foreach","UNMASC")
+all_packs = as.character(installed.packages()[,1])
+rerun = 0
+
+for(pack in req_packs){
+	if( pack %in% all_packs ){
+		library(package = pack,character.only = TRUE)
+		next
+	}
+	
+	if( pack %in% c("smartr","UNMASC") ){
+		
+		repo = sprintf("pllittle/%s",pack)
+		devtools::install_github(repo = repo)
+	
+	} else if( pack %in% c("seqTools","Rsamtools",
+		"GenomicRanges","IRanges") ){
+		
+		BiocManager::install(pack)
+	
+	} else {
+		
+		install.packages(pack)
+		
+	}
+	
+	rerun = 1
+	
 }
 
-# UNMASC
-if( !("UNMASC" %in% all_packs) )
-	devtools::install_github("pllittle/UNMASC")
+if( rerun == 1 ) stop("Re-run above code")
 ```
 
 ## UNMASC inputs
