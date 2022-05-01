@@ -1,5 +1,11 @@
 # UNMASC - Unmatched Normals and Mutant Allele Status Characterization
 
+<!-- badges: start -->
+![C++](https://img.shields.io/badge/C++-%2300599C.svg?style=square&logo=c%2B%2B&logoColor=gold)
+![R](https://img.shields.io/badge/R-%23276DC3.svg?style=square&logo=r&logoColor=pink)
+![CRAN status](https://www.r-pkg.org/badges/version/UNMASC)
+<!-- badges: end -->
+
 ## What is this for?
 
 One goal of cancer genomics is to identify DNA variants specific to the cancer tissue within an individual. Perhaps a researcher would like to identify mutated genes and design a cancer treatment or therapy specific to that individual's cancer. These cancer variants are considered **somatic** or variants that cannot be inherited. Our normal tissue harbors inherited DNA variants called  **germline** variants that are present and identical across all normal tissue. 
@@ -24,12 +30,13 @@ Little, P., Jo, H., [Hoyle, A.](https://github.com/alanhoyle), [Mazul, A.](https
 R/RStudio code to check, install, and load libraries.
 
 ```R
-req_packs = c("devtools","smartr","Rcpp","RcppArmadillo","emdbook",
+req_packs = c("devtools","smarter","Rcpp","RcppArmadillo","emdbook",
 	"scales","BiocManager","seqTools","parallel","doParallel",
 	"data.table","grDevices","Rsamtools","GenomicRanges",
 	"IRanges","foreach","UNMASC")
 all_packs = as.character(installed.packages()[,1])
 rerun = 0
+build_vign = ifelse(Sys.getenv("RSTUDIO_PANDOC") == "",FALSE,TRUE)
 
 for(pack in req_packs){
 	if( pack %in% all_packs ){
@@ -37,27 +44,32 @@ for(pack in req_packs){
 		next
 	}
 	
+	bb = NULL
 	if( pack %in% c("smartr","UNMASC") ){
-		
 		repo = sprintf("pllittle/%s",pack)
-		devtools::install_github(repo = repo)
-	
+		bb = tryCatch(devtools::install_github(repo = repo,
+			build_vignettes = build_vign,
+			dependencies = TRUE),
+			error = function(ee){"error"})
 	} else if( pack %in% c("seqTools","Rsamtools",
 		"GenomicRanges","IRanges") ){
-		
-		BiocManager::install(pack)
-	
+		bb = tryCatch(BiocManager::install(pkgs = pack,
+			build_vignettes = build_vign,
+			dependencies = TRUE),
+			error = function(ee){"error"})
 	} else {
-		
-		install.packages(pack)
-		
+		bb = tryCatch(install.packages(pkgs = pack,
+			dependencies = TRUE),
+			error = function(ee){"error"})
 	}
 	
+	if( !is.null(bb) && bb == "error" )
+		stop(sprintf("Error for package = %s",pack))
 	rerun = 1
-	
 }
 
 if( rerun == 1 ) stop("Re-run above code")
+
 ```
 
 ## UNMASC inputs

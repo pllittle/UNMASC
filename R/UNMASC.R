@@ -4048,7 +4048,7 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 }
 
 
-#' @importFrom smartr smart_df smart_table smart_merge
+#' @importFrom smarter smart_df smart_table smart_merge
 #'	smart_mkdir smart_hist smart_rmcols name_change
 #'	smart_WT smart_progress smart_reqNames
 #' @importFrom Rcpp sourceCpp
@@ -4079,11 +4079,11 @@ NULL
 # devtools::document(pkg = pack_dir); usethis::use_gpl3_license()
 # Sys.setenv("RSTUDIO_PANDOC" = "C:/Program Files/RStudio/bin/pandoc")
 # check_pandoc = rmarkdown::pandoc_available(); check_pandoc
-#### usethis::use_vignette(name = "test",title = "Testing")
-# make_vignette = FALSE
-# devtools::check(pkg = pack_dir,manual = TRUE,cran = !FALSE,error_on = c("warning","note")[1],vignettes = make_vignette)
-# devtools::install(pack_dir,build_vignettes = make_vignette)
-
+# make_vign = check_pandoc && !TRUE
+# devtools::check(pkg = pack_dir,manual = TRUE,cran = TRUE,error_on = c("warning","note")[2],vignettes = make_vign)
+# devtools::install(pack_dir,build_vignettes = make_vign)
+# bb = readLines("../DESCRIPTION"); vers = strsplit(bb[grepl("Version",bb)]," ")[[1]][2]; vers
+# devtools::build(pkg = pack_dir,path = sprintf("C:/Users/Admin/Desktop/%s_%s.tar.gz",pack,vers))
 
 ###
 
