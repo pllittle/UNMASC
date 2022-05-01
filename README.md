@@ -1,4 +1,6 @@
-# UNMASC - Unmatched Normals and Mutant Allele Status Characterization
+<div align="left">
+<a href=""><img src="https://img.shields.io/badge/R-%23276DC3.svg?style=square&logo=r&logoColor=pink&label=UNMASC" width="500" /></a>
+</div>
 
 <!-- badges: start -->
 ![C++](https://img.shields.io/badge/C++-%2300599C.svg?style=square&logo=c%2B%2B&logoColor=gold)
