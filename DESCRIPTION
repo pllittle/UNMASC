@@ -7,7 +7,7 @@ Author: Paul Little
 Maintainer: Paul Little <plittle@fredhutch.org>
 Description: Tumor-only variant calling is conducted through tumor and
 	unmatched normal annotation, filtering, clustering, and
-	segmentation.
+	segmentation (Little et al. (2021) <doi:10.1093/narcan/zcab040>).
 Encoding: UTF-8
 Imports: smarter, data.table, doParallel, foreach, parallel,
 	GenomicRanges, IRanges, Rsamtools, emdbook, scales, seqTools,
