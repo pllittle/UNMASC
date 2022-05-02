@@ -32,45 +32,27 @@ Little, P., Jo, H., [Hoyle, A.](https://github.com/alanhoyle), [Mazul, A.](https
 R/RStudio code to check, install, and load libraries.
 
 ```R
-req_packs = c("devtools","smarter","Rcpp","RcppArmadillo","emdbook",
-	"scales","BiocManager","seqTools","parallel","doParallel",
-	"data.table","grDevices","Rsamtools","GenomicRanges",
-	"IRanges","foreach","UNMASC")
 all_packs = as.character(installed.packages()[,1])
-rerun = 0
-build_vign = ifelse(Sys.getenv("RSTUDIO_PANDOC") == "",FALSE,TRUE)
+pandoc = Sys.getenv("RSTUDIO_PANDOC")
+build_vign = !is.null(pandoc) && file.exists(pandoc)
 
-for(pack in req_packs){
-	if( pack %in% all_packs ){
-		library(package = pack,character.only = TRUE)
-		next
-	}
-	
-	bb = NULL
-	if( pack %in% c("smartr","UNMASC") ){
-		repo = sprintf("pllittle/%s",pack)
-		bb = tryCatch(devtools::install_github(repo = repo,
-			build_vignettes = build_vign,
-			dependencies = TRUE),
-			error = function(ee){"error"})
-	} else if( pack %in% c("seqTools","Rsamtools",
-		"GenomicRanges","IRanges") ){
-		bb = tryCatch(BiocManager::install(pkgs = pack,
-			build_vignettes = build_vign,
-			dependencies = TRUE),
-			error = function(ee){"error"})
-	} else {
-		bb = tryCatch(install.packages(pkgs = pack,
-			dependencies = TRUE),
-			error = function(ee){"error"})
-	}
-	
-	if( !is.null(bb) && bb == "error" )
-		stop(sprintf("Error for package = %s",pack))
-	rerun = 1
+if( !("smarter" %in% all_packs) ){
+	stop("Check https://github.com/pllittle/smarter for installation")
 }
 
-if( rerun == 1 ) stop("Re-run above code")
+library(smarter)
+cran_packs = c("devtools","Rcpp","RcppArmadillo","emdbook",
+	"scales","BiocManager","parallel","doParallel",
+	"data.table","grDevices","foreach")
+bioc_packs = c("seqTools","Rsamtools","GenomicRanges",
+	"IRanges")
+
+smarter::smart_packDeps(
+	cran_packs = cran_packs,
+	bioc_packs = bioc_packs,
+	github_packs = c("pllittle/UNMASC"),
+	pandoc = pandoc,
+	build_vign = build_vign)
 
 ```
 
