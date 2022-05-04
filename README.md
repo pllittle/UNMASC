@@ -22,7 +22,7 @@ A third set of detected and unavoidable variants are false positives or **artifa
 
 <p align="center">
 <img src="images/workflow.PNG" width="70%" />
-<p align="center"><em>UNMASC workflow for a single tumor sample against Z unmatched normal controls.</em></p>
+<p align="center"><em>UNMASC workflow for a single tumor sample against Z unmatched normal controls. SB = strand bias, SEG = segmentation, OXOG = oxoG artifacts, FFPE = paraffin artifacts.</em></p>
 </p>
 
 ## Description
