@@ -199,6 +199,8 @@ To open the package vignette, run ```vignette("UNMASC")```.
 ## Future directions
 
 * Workflow containers
+* Shell script functions for dependency installations to variant calling to UNMASC
+* Add MuTect/MuTect2 sample code
 * Applying UNMASC toward circulating plasma tumor cell DNA
 * Identifying somatic mutations missed by tumors with matched normals
 
