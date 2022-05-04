@@ -116,7 +116,8 @@ Strelka2 variant calling + SNV/INDEL VCF merge.
 
 ```Shell
 work_dir=
-[ -z "$work_dir" ] && echo "Set work_dir" >&2 && return 1
+[ -z "$work_dir" ] && echo "Set work_dir!" >&2 && return 1
+[ ! -d $work_dir ] && mkdir $work_dir
 
 # Make github dir
 git_dir=$work_dir/github
