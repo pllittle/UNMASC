@@ -1,11 +1,12 @@
 <div align="left">
-<a href=""><img src="https://img.shields.io/badge/R-%23276DC3.svg?style=square&logo=r&logoColor=pink&label=UNMASC" width="500" /></a>
+<a href=""><img src="https://img.shields.io/badge/R-%23276DC3.svg?style=square&logo=r&logoColor=pink&label=UNMASC" height="100" /></a>
 </div>
 
 <!-- badges: start -->
 ![C++](https://img.shields.io/badge/C++-%2300599C.svg?style=square&logo=c%2B%2B&logoColor=gold)
 ![R](https://img.shields.io/badge/R-%23276DC3.svg?style=square&logo=r&logoColor=pink)
 ![CRAN status](https://www.r-pkg.org/badges/version/UNMASC)
+[![DOI](https://zenodo.org/badge/DOI/10.1093/narcan/zcab040.svg)](https://doi.org/10.1093/narcan/zcab040)
 <!-- badges: end -->
 
 ## What is this for?
