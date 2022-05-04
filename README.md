@@ -20,6 +20,11 @@ If one sequences an individual's matched normal DNA (e.g. from blood or adjacent
 
 A third set of detected and unavoidable variants are false positives or **artifacts** that can arise from several sources including poor sequencing, sample storage, read misalignment to the reference genome, etc. UNMASC attempts to identify somatic variants from tumor samples without an adequate matched normal.
 
+<p align="center">
+<img src="images/workflow.png" width="50%" />
+<p align="center"><em>UNMASC workflow for a single tumor sample against Z unmatched normal controls.</em></p>
+</p>
+
 ## Description
 
 This package is designed to filter and annotate tumor-only variant calls through the integration of public database annotations, clustering, and segmentation to provide the user with a clear characterization of each variant when called against a set of unmatched normal controls.
