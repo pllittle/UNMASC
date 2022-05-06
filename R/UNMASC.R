@@ -3802,8 +3802,12 @@ TO_genotype = function(vcf,outdir,hg,genome,strand,
 #'	tumor reference depth, respectively.
 #' @param tBAM_fn A character string specifying the full path 
 #'	to the tumor's BAM file.
-#' @param bed_centromere_fn Centromere regions filename.
-#' @param dict_chrom_fn Chromosome lengths file.
+#' @param bed_centromere_fn Centromere regions filename. This should
+#'	be tab delimited without headers containing columns contig (e.g. 'chr1'),
+#'	start position (e.g. 100), and end position (e.g. 100000).
+#' @param dict_chrom_fn Chromosome lengths file. This can be
+#'	constructed from the output of 'samtools view -H' applied
+#'	to a bam file.
 #' @param qscore_thres A numeric value specifying a minimum 
 #'	allowed Qscore or QUAL value for variant calls.
 #' @param exac_thres A numeric value specifying a maximum 
