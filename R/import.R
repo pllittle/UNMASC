@@ -93,19 +93,22 @@ import_strelkaVCF = function(vcf_fn,FILTER = NULL,ncores = 1){
 	return(tmp_df)
 	
 }
-import_ANNO = function(anno_fn,ncores = 1){
+import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	
 	# Check format
-	aa = readLines(anno_fn,n = 100)
-	aa = aa[grepl("^#",aa)]; aa = gsub("\"","",aa)
-	bb = aa[grepl("ID=CSQ",aa)]; bb = strsplit(bb," ")[[1]]
-	bb = bb[grepl("IMPACT",bb)]; bb = gsub(">","",bb)
+	aa = readLines(anno_fn,n = nlines)
+	aa = aa[grepl("^#",aa)]
+	aa = gsub("\"","",aa)
+	bb = aa[grepl("ID=CSQ",aa)]
+	bb = strsplit(bb," ")[[1]]
+	bb = bb[grepl("IMPACT",bb)]
+	bb = gsub(">","",bb)
 	if( length(bb) != 1 || 
 		bb[1] != "IMPACT|Consequence|SYMBOL|HGVSc|HGVSp|AF|gnomAD_AF|COSMIC|COSMIC_CNT|COSMIC_LEGACY_ID" )
-		warning("Annotation file may not be correctly processed")
+		stop("Annotation file may not be correctly processed")
 	
 	cat(sprintf("%s: Import annotation file ...\n",date()))
-	anno = fread(anno_fn,sep = "\t",header = TRUE,
+	ANNO = fread(anno_fn,sep = "\t",header = TRUE,
 		skip = "#CHROM",nThread = ncores,data.table = FALSE)
 	
 	cat(sprintf("%s: Parse annotation ...\n",date()))
@@ -121,30 +124,57 @@ import_ANNO = function(anno_fn,ncores = 1){
 	# Cosmic/legacy ids
 	cat(sprintf("%s: Process COSMIC ...\n",date()))
 	ANNO$CosmicOverlaps = ANNO$CosmicIDs = NA
-	idx = which(grepl("COSM",ANNO$INFO)); length(idx)
-	tmp_mat = t(sapply(ANNO$INFO[idx],function(xx){
-		# xx = ANNO$INFO[idx][1]; xx
-		xx2 = strsplit(xx,"=")[[1]][2]
-		xx2 = strsplit(xx2,",")[[1]][1]
-		xx2 = strsplit(xx2,"[|]")[[1]][8:10]
-		xx2[2] = max(as.integer(strsplit(xx2[2],"&")[[1]]))
-		xx2[-2] = sort(unique(strsplit(xx2[-2],"&")[[1]]))
-		c(xx2[2],paste(xx2[-2],collapse = ";"))
-	},USE.NAMES = FALSE))
-	tmp_mat = smart_df(tmp_mat)
-	names(tmp_mat) = c("CosmicOverlaps","CosmicIDs")
-	tmp_mat$CosmicOverlaps = as.integer(tmp_mat$CosmicOverlaps)
-	ANNO[idx,c("CosmicOverlaps","CosmicIDs")] = tmp_mat
+	idx = which(grepl("COS",ANNO$INFO)); length(idx)
+	if( length(idx) == 0 ){
+		cat(sprintf("%s: No COSMIC hits found ...\n",date()))
+	} else {
+		tmp_mat = t(sapply(ANNO$INFO[idx],function(xx){
+			# xx = ANNO$INFO[idx][4]; xx
+			xx2 = strsplit(xx,";")[[1]]
+			xx2 = xx2[grepl("^CSQ=",xx2)]
+			xx2 = strsplit(xx2,"=")[[1]][2]
+			xx2 = strsplit(xx2,",")[[1]]
+			# xx2
+			
+			xx2 = t(sapply(xx2,function(zz){
+				strsplit(zz,"[|]")[[1]][8:10] # COSV_ID, CNT, COSM_ID
+			},USE.NAMES = FALSE))
+			xx2 = unique(xx2)
+			if( nrow(xx2) != 1 ) stop("update COSMIC parsing")
+			xx2 = c(xx2)
+			xx2
+			
+			# Process COSV_ID
+			if( !is.na(xx2[1]) )
+				xx2[1] = paste(unique(strsplit(xx2[1],"&")[[1]]),collapse = "&")
+			
+			# Process CNT
+			xx2[2] = max(as.integer(strsplit(xx2[2],"&")[[1]]))
+			
+			# Process COSM_ID
+			if( !is.na(xx2[3]) )
+				xx2[3] = paste(unique(strsplit(xx2[3],"&")[[1]]),collapse = "&")
+			
+			c(xx2[2],paste(xx2[-2][!is.na(xx2[-2])],collapse = ";"))
+		},USE.NAMES = FALSE))
+		tmp_mat = smart_df(tmp_mat)
+		names(tmp_mat) = c("CosmicOverlaps","CosmicIDs")
+		tmp_mat$CosmicOverlaps = as.integer(tmp_mat$CosmicOverlaps)
+		ANNO[idx,c("CosmicOverlaps","CosmicIDs")] = tmp_mat
+		rm(idx,tmp_mat)
+	}
 	ANNO$CosmicOverlaps[is.na(ANNO$CosmicOverlaps)] = 0
 	ANNO$CosmicIDs[is.na(ANNO$CosmicIDs)] = ""
-	rm(idx,tmp_mat)
 	
 	cat(sprintf("%s: Process snpEff/Impact ...\n",date()))
 	tmp_mat = t(sapply(ANNO$INFO,function(xx){
-		# xx = anno$INFO[1]
-		xx2 = strsplit(xx,"=")[[1]][2]
+		# xx = ANNO$INFO[1]
+		xx2 = strsplit(xx,";")[[1]]
+		xx2 = xx2[grepl("^CSQ=",xx2)]
+		xx2 = strsplit(xx2,"=")[[1]][2]
 		xx2 = strsplit(xx2,",")[[1]]
 		# xx2
+		
 		for(EFF in c("HIGH","MODERATE","LOW","MODIFIER")){
 			if( any(grepl(EFF,xx2)) ){
 				idx = grep(EFF,xx2)
@@ -152,16 +182,19 @@ import_ANNO = function(anno_fn,ncores = 1){
 			}
 		}
 		xx2 = xx2[idx]
+		# xx2
 		
 		# extract impact|consequence|symbol|hgvsc|hgvsp, drop cosmic/exac/1000g
 		xx2 = sapply(xx2,function(zz){
 			paste(strsplit(zz,"[|]")[[1]][1:5],collapse = "|")
 		},USE.NAMES = FALSE)
+		# xx2
 		
 		c(paste(xx2,collapse = ","),EFF)
 	},USE.NAMES = FALSE))
 	tmp_mat = smart_df(tmp_mat)
 	names(tmp_mat) = c("snpEff","IMPACT")
+	ANNO = smart_rmcols(ANNO,c("snpEff","IMPACT"))
 	ANNO = cbind(ANNO,tmp_mat); rm(tmp_mat)
 	smart_table(ANNO$IMPACT)
 	
@@ -243,9 +276,14 @@ import_ANNO = function(anno_fn,ncores = 1){
 	cat(sprintf("%s: Process ThsdG_AF ...\n",date()))
 	ANNO$ThsdG_AF = sapply(ANNO$INFO,function(xx){
 		# xx = ANNO$INFO[1]
-		xx2 = strsplit(xx,"=")[[1]][2]
-		xx2 = strsplit(xx2,",")[[1]][1]
-		xx2 = strsplit(xx2,"[|]")[[1]][6]
+		xx2 = strsplit(xx,";")[[1]]
+		xx2 = xx2[grepl("^CSQ=",xx2)]
+		xx2 = strsplit(xx2,"=")[[1]][2]
+		xx2 = strsplit(xx2,",")[[1]]
+		xx2 = sapply(xx2,function(zz){
+			strsplit(zz,"[|]")[[1]][6]
+		},USE.NAMES = FALSE)
+		xx2 = unique(xx2)
 		xx2
 	},USE.NAMES = FALSE)
 	ANNO$ThsdG_AF[which(ANNO$ThsdG_AF == "")] = 0
@@ -254,9 +292,18 @@ import_ANNO = function(anno_fn,ncores = 1){
 	cat(sprintf("%s: Process EXAC_AF ...\n",date()))
 	ANNO$EXAC_AF = sapply(ANNO$INFO,function(xx){
 		# xx = ANNO$INFO[1]
-		xx2 = strsplit(xx,"=")[[1]][2]
-		xx2 = strsplit(xx2,",")[[1]][1]
-		xx2 = strsplit(xx2,"[|]")[[1]][7]
+		xx2 = strsplit(xx,";")[[1]]
+		xx2 = xx2[grepl("^CSQ=",xx2)]
+		xx2 = strsplit(xx2,"=")[[1]][2]
+		xx2 = strsplit(xx2,",")[[1]]
+		xx2 = sapply(xx2,function(zz){
+			strsplit(zz,"[|]")[[1]][7]
+		},USE.NAMES = FALSE)
+		xx2 = unique(xx2)
+		if( xx2 == "" ) return(xx2)
+		xx2 = as.numeric(strsplit(xx2,"&")[[1]])
+		xx2 = max(xx2)
+		if( length(xx2) != 1 ) stop("update ExAC parsing")
 		xx2
 	},USE.NAMES = FALSE)
 	ANNO$EXAC_AF[which(ANNO$EXAC_AF == "")] = 0
@@ -311,13 +358,13 @@ import_VCFs = function(DAT,FILTER = NULL,ncores = 1){
 		FILTER = list(nDP = 2,tDP = 2,Qscore = 3,
 			contigs = sprintf("chr%s",c(1:22,"X","Y")))
 	}
-	if( is.null(FILTER$nDP) || is.numeric(FILTER$nDP) )
+	if( is.null(FILTER$nDP) || !is.numeric(FILTER$nDP) )
 		stop("Issue with FILTER$nDP")
-	if( is.null(FILTER$tDP) || is.numeric(FILTER$tDP) )
+	if( is.null(FILTER$tDP) || !is.numeric(FILTER$tDP) )
 		stop("Issue with FILTER$tDP")
-	if( is.null(FILTER$Qscore) || is.numeric(FILTER$Qscore) )
+	if( is.null(FILTER$Qscore) || !is.numeric(FILTER$Qscore) )
 		stop("Issue with FILTER$Qscore")
-	if( is.null(FILTER$contigs) || is.character(FILTER$contigs) )
+	if( is.null(FILTER$contigs) || !is.character(FILTER$contigs) )
 		stop("Issue with FILTER$contigs")
 	
 	smart_header(OBJ = DAT,req_COLS = c("FILENAME","STUDYNUMBER"))
@@ -369,10 +416,13 @@ import_VCFs = function(DAT,FILTER = NULL,ncores = 1){
 #'	'Chr', 'Start', and 'End'.
 #' @param anno_fn A filename for the unique set of variant loci called
 #'	across multiple normals and annotated by VEP.
+#' @param nlines An integer specifying the number of initial lines to
+#'	read in from the \code{anno_fn} to assess the expected formatting.
 #' @inheritParams run_UNMASC
 #' @inheritParams import_VCFs
 #' @export
-prep_UNMASC_VCF = function(outdir,DAT,FILTER,target_fn,anno_fn,ncores = 1){
+prep_UNMASC_VCF = function(outdir,DAT,FILTER,target_fn,
+	anno_fn,nlines = 100,ncores = 1){
 	
 	# Get VCFs
 	vcfs_rds_fn = file.path(outdir,"vcfs.rds")
@@ -386,7 +436,9 @@ prep_UNMASC_VCF = function(outdir,DAT,FILTER,target_fn,anno_fn,ncores = 1){
 	# Get ANNO
 	anno_rds_fn = file.path(outdir,"anno.rds")
 	if( !file.exists(anno_rds_fn) ){
-		anno = import_ANNO(anno_fn = anno_fn,ncores = ncores)
+		anno = import_ANNO(anno_fn = anno_fn,
+			nlines = nlines,
+			ncores = ncores)
 		saveRDS(anno,anno_rds_fn)
 	}
 	anno = readRDS(anno_rds_fn)
@@ -410,5 +462,6 @@ prep_UNMASC_VCF = function(outdir,DAT,FILTER,target_fn,anno_fn,ncores = 1){
 	
 	return(final_vcf)
 }
+
 ###
 

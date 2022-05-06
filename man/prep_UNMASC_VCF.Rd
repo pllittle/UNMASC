@@ -4,7 +4,15 @@
 \alias{prep_UNMASC_VCF}
 \title{prep_UNMASC_VCF}
 \usage{
-prep_UNMASC_VCF(outdir, DAT, FILTER, target_fn, anno_fn, ncores = 1)
+prep_UNMASC_VCF(
+  outdir,
+  DAT,
+  FILTER,
+  target_fn,
+  anno_fn,
+  nlines = 100,
+  ncores = 1
+)
 }
 \arguments{
 \item{outdir}{A character string of the full path and working directory specifying 
@@ -26,6 +34,9 @@ capture bed file. The first three column headers should be
 
 \item{anno_fn}{A filename for the unique set of variant loci called
 across multiple normals and annotated by VEP.}
+
+\item{nlines}{An integer specifying the number of initial lines to
+read in from the \code{anno_fn} to assess the expected formatting.}
 
 \item{ncores}{A positive integer for the number of threads to 
 use for calculating strand-specific read counts.}
