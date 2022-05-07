@@ -64,104 +64,37 @@ smarter::smart_packDeps(
 
 ## UNMASC inputs
 
-* Annotated variant calls (e.g. Strelka/Strelka2 + VEP)
-* Target capture bed file
-* Centromere start/end bed file
-* Tumor bam filename
+* annotated variant calls (e.g. Strelka/Strelka2 + VEP)
+* target capture bed file: contains contig, start position, end position columns
+* centromere start/end bed file
+* dict_chrom file: Run `samtools view -H tumor.bam` and save the output.
+* tumor bam filename
 
 ## Workflow template code for UNMASC inputs
 
 UNMASC's benchmark samples were run with Strelka. Assuming 
 
-* [Strelka](https://sites.google.com/site/strelkasomaticvariantcaller/) or [Strelka2](https://github.com/Illumina/strelka), 
+* [Strelka](https://sites.google.com/site/strelkasomaticvariantcaller/)
+* [Strelka2](https://github.com/Illumina/strelka), 
 * [GATK](https://github.com/broadinstitute/gatk), and
 * [VEP](https://uswest.ensembl.org/info/docs/tools/vep/index.html) 
 
-are installed along with corresponding dependencies (Perl, HTSlib, etc.), Linux commands are provided below to run these software for variant calling and annotation. Running our customized VEP annotation requires downloading a COSMIC database VCF. For example, CosmicCodingMuts.vcf.gz for GRCh37 with the latest release can be found at [here](https://cancer.sanger.ac.uk/cosmic/download?genome=37). We have instructed VEP to annotate variants with 1000 Genomes population allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, impacts/consequences, and COSMIC counts with legacy IDs.
+are installed along with corresponding dependencies (Perl, HTSlib, etc.), 
+Linux commands are provided below to run these software for variant calling 
+and annotation. Running our customized VEP annotation requires downloading 
+a COSMIC database VCF. For example, CosmicCodingMuts.vcf.gz for GRCh37 with 
+the latest release can be found at 
+[here](https://cancer.sanger.ac.uk/cosmic/download?genome=37). 
+We have instructed VEP to annotate variants with 1000 Genomes population 
+allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, 
+impacts/consequences, and COSMIC counts with stable and legacy IDs.
 
-### Sample codes
-
-```Shell
-# ----------
-# Directories and filenames
-# ----------
-stk_dir=<strelka directory>
-out_dir=<output directory>
-stk2_dir=<strelka2 directory>
-gatk_dir=<GATK directory>
-vep_dir=<VEP directory>
-
-nbam=<control bam filename>
-tbam=<tumor bam filename>
-fasta=<reference fasta filename>
-nthreads=<number of threads>
-genome=GRCh37
-cosmic_fn=<COSMIC coding variants VCF>
-```
-
-Strelka variant calling.
-
-```Shell
-# ----------
-# Strelka commands for a tumor and control pair.
-# ----------
-$stk_dir/bin/configureStrelkaWorkflow.pl \
-	--normal=$nbam --tumor=$tbam --ref=$fasta \
-	--config=$out_dir/config.ini \
-	--output-dir=$out_dir
-
-make -C $out_dir/ -j $nthreads
-```
-
-Strelka2 variant calling + SNV/INDEL VCF merge.
-
-```Shell
-work_dir=
-[ -z "$work_dir" ] && echo "Set work_dir!" >&2 && return 1
-[ ! -d $work_dir ] && mkdir $work_dir
-
-# Make github dir
-git_dir=$work_dir/github
-[ ! -d $git_dir ] && mkdir $git_dir
-
-# Get my Strelka2 function
-cd $git_dir
-[ ! -d baSHic ] && git clone https://github.com/pllittle/baSHic.git
-[ -d baSHic ] && cd baSHic && git pull
-. $git_dir/baSHic/scripts/genomic.sh
-[ ! $? -eq 0 ] && echo "Some error in sourcing" >&2 && return 1
-
-# Assuming Strelka2 and GATK are installed, run code below
-run_strelka2_soma -s $stk2_dir -g $gatk_dir \
-	-t $tbam -n $nbam -r $fasta -o $out_dir -c $nthreads
-```
-
-Running VEP for VCF annotation.
-
-```Shell
-# ----------
-# Variant Effect Predictor (VEP)
-# ----------
-vep_fields=IMPACT,Consequence,SYMBOL,HGVSc,HGVSp,AF
-vep_fields="$vep_fields,gnomAD_AF,COSMIC,COSMIC_CNT"
-vep_fields="$vep_fields,COSMIC_LEGACY_ID"
-
-zcat $out_dir/somatic.vcf.gz > $out_dir/somatic.vcf
-
-$vep_dir/vep --format vcf --species homo_sapiens \
-	-i $out_dir/somatic.vcf -o $out_dir/somatic.vep.vcf \
-	--fork $nthreads --cache --dir_cache $vep_dir \
-	--cache_version 104 --assembly $genome --fasta $fasta \
-	--force_overwrite --no_stats --domains --hgvs --af \
-	--af_gnomad --vcf \
-	--custom $cosmic_fn,COSMIC,vcf,exact,0,CNT,LEGACY_ID \
-	--fields "$vep_fields"
-
-```
+Refer to our documentation for steps.
 
 ## Prepare UNMASC's annotated VCF
 
-02/15/2022: Code below will import merged Strelka2 vcfs, VEP annotation vcf, and target bed file to prepare UNMASC's main `vcf` input R data.frame.
+Code below will import merged Strelka2 vcfs, VEP annotation vcf, and target bed file 
+to prepare UNMASC's main `vcf` input R data.frame.
 
 ```R
 vcf = prep_UNMASC_VCF(outdir,DAT,FILTER,
