@@ -1,5 +1,5 @@
 <div align="left">
-<a href=""><img src="https://img.shields.io/badge/R-%23276DC3.svg?style=square&logo=r&logoColor=pink&label=UNMASC" height="100" /></a>
+<a href=""><img src="https://img.shields.io/badge/R-%23276DC3.svg?style=square&logo=r&logoColor=pink&label=UNMASC" height="80" /></a>
 </div>
 
 <!-- badges: start -->
@@ -79,7 +79,7 @@ UNMASC's benchmark samples were run with Strelka. Assuming
 * [GATK](https://github.com/broadinstitute/gatk), and
 * [VEP](https://uswest.ensembl.org/info/docs/tools/vep/index.html) 
 
-are installed along with corresponding dependencies (Perl, HTSlib, etc.), 
+are installed along with corresponding dependencies (GATK, Perl, HTSlib, etc.), 
 Linux commands are provided below to run these software for variant calling 
 and annotation. Running our customized VEP annotation requires downloading 
 a COSMIC database VCF. For example, CosmicCodingMuts.vcf.gz for GRCh37 with 
@@ -89,7 +89,8 @@ We have instructed VEP to annotate variants with 1000 Genomes population
 allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, 
 impacts/consequences, and COSMIC counts with stable and legacy IDs.
 
-Refer to our documentation for steps.
+Refer to our [documentation](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md) 
+for inputs and steps.
 
 ## Prepare UNMASC's annotated VCF
 
