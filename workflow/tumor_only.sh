@@ -8,8 +8,8 @@ done
 
 # Tumor-only Workflow, credit to Heejoon Jo
 TO_workflow(){
-	local cosm_dir cosm_ver stk_dir gatk_dir vep_dir vep_rel status
-	local nbam nbam2 nbams tbam fasta_fn out_dir cosmic_fn
+	local genome cosm_dir cosm_ver stk_dir gatk_dir vep_dir vep_rel status
+	local nbam nbam2 nbams tbam fasta_fn out_dir cosmic_fn vep_cache
 	local ncores work_dir hts_dir cnt tbam2 cmd
 	
 	while [ ! -z $1 ]; do
@@ -66,10 +66,15 @@ TO_workflow(){
 				shift
 				vep_rel="$1"
 				;;
+			-a | --vep_cache )
+				shift
+				vep_cache="$1"
+				;;
 		esac
 		shift
 	done
 	
+	# Check inputs
 	[ -z $ncores ] 		&& echo "Add -c <number of threads, cores>" >&2 && return 1
 	[ -z $fasta_fn ] 	&& echo "Add -f <fasta_fn>" >&2 && return 1
 	[ -z $genome ] 		&& echo "Add -g <genome, e.g. GRCh37, GRCh38>" >&2 && return 1
@@ -83,6 +88,10 @@ TO_workflow(){
 	[ -z $vep_rel ] 	&& echo "Add -r <vep_rel, VEP release>" >&2 && return 1
 	[ -z $cosm_dir ] 	&& echo "Add -d <COSMIC dir>" >&2 && return 1
 	[ -z $cosm_ver ] 	&& echo "Add -e <COSMIC version, e.g. 94, 95>" >&2 && return 1
+	[ -z $vep_cache ] && echo "Add -a <VEP cache, e.g. vep, refseq, merged>" >&2 && return 1
+	
+	check_array $vep_cache vep refseq merged
+	[ ! $? -eq 0 ] && echo "Error: VEP cache should be vep, refseq, or merged" >&2 && return 1
 	
 	new_mkdir $out_dir
 	tbam2=`echo $tbam | sed 's|/|\n|g' | tail -n 1`
@@ -96,7 +105,7 @@ TO_workflow(){
 		work_dir=$out_dir/normal_$cnt
 		new_mkdir $work_dir
 		
-		# Run Strelka
+		# Run Strelka2
 		run_strelka2_soma -s $stk_dir -g $gatk_dir \
 			-t $tbam -n $nbam -r $fasta_fn -o $work_dir \
 			-c $ncores
@@ -131,9 +140,8 @@ TO_workflow(){
 	# Run VEP
 	run_VEP -c $cosmic_fn -f $fasta_fn -g $genome \
 		-i $out_dir/allvar.vcf -n 1 -o $out_dir/allvar_ann.vcf \
-		-v $vep_dir -r $vep_rel
-	status=$?
-	[ ! $status -eq 0 ] && echo "Error with VEP" >&2 && return 1
+		-v $vep_dir -r $vep_rel -a $vep_cache
+	[ ! $? -eq 0 ] && echo "Error with VEP" >&2 && return 1
 	new_rm $out_dir/allvar.vcf
 	
 	return 0
