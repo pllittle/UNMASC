@@ -23,7 +23,11 @@ vep_dir=; [ -z "$vep_dir" ] \
 	&& return 1
 
 vep_rel=; [ -z "$vep_rel" ] \
-	&& echo "Set vep_rel, VEP release number" >&2 \
+	&& echo "Set vep_rel, VEP release number, preferably 105 with GRCh37 and GRCh38 supported" >&2 \
+	&& return 1
+
+vep_cache=; [ -z "$vep_cache" ] \
+	&& echo "Set vep_cache, VEP homo_sapiens cache, should be vep, refseq, or merged" >&2 \
 	&& return 1
 
 hts_dir=; [ -z "$hts_dir" ] \
@@ -148,6 +152,6 @@ to extract specific steps to execute :smile:.
 TO_workflow -c $nthreads -f $fasta_fn -g $genome \
 	-d $cosm_dir -e $cosm_ver -h $hts_dir -k $gatk_dir \
 	-n $nbams -o $out_dir -s $stk2_dir -t $tbam \
-	-v $vep_dir -r $vep_rel
+	-v $vep_dir -r $vep_rel -a $vep_cache
 
 ```

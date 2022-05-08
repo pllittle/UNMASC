@@ -11,6 +11,9 @@
 
 ## What is this for?
 
+<details>
+<summary>Click to expand!</summary>
+
 One goal of cancer genomics is to identify DNA variants specific 
 to the cancer tissue within an individual. Perhaps a researcher 
 would like to identify mutated genes and design a cancer treatment 
@@ -44,6 +47,8 @@ without an adequate matched normal.
 Z unmatched normal controls. SB = strand bias, SEG = segmentation, 
 OXOG = oxoG artifacts, FFPE = paraffin artifacts.</em></p>
 </p>
+
+</details>
 
 ## Description
 
