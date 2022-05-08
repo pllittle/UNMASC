@@ -76,6 +76,10 @@ UNMASC: tumor-only variant calling with unmatched normal controls.
 
 ## Installation
 
+<details>
+
+<summary>Click to expand!</summary>
+
 R/RStudio code to check, install, and load libraries.
 
 ```R
@@ -103,6 +107,8 @@ smarter::smart_packDeps(
 
 ```
 
+</details>
+
 ## UNMASC inputs
 
 * annotated variant calls (e.g. Strelka/Strelka2 + VEP)
@@ -115,8 +121,7 @@ smarter::smart_packDeps(
 
 UNMASC's benchmark samples were run with Strelka. Assuming 
 
-* [Strelka](https://sites.google.com/site/strelkasomaticvariantcaller/)
-* [Strelka2](https://github.com/Illumina/strelka), 
+* [Strelka](https://sites.google.com/site/strelkasomaticvariantcaller/) or [Strelka2](https://github.com/Illumina/strelka), 
 * [GATK](https://github.com/broadinstitute/gatk), and
 * [VEP](https://uswest.ensembl.org/info/docs/tools/vep/index.html) 
 
@@ -144,6 +149,10 @@ vcf = prep_UNMASC_VCF(outdir,DAT,FILTER,
 ```
 
 ## Run UNMASC
+
+<details>
+
+<summary>Click to expand!</summary>
 
 Template code to run UNMASC
 
@@ -178,6 +187,8 @@ UNMASC::run_UNMASC(tumorID = tumorID,outdir = outdir,
 	psi_thres = psi_thres,hg = "19",binom = binom,gender = gender,
 	ncores = ncores)
 ```
+
+</details>
 
 <!---
 ## Output
