@@ -52,9 +52,13 @@ tumor reference depth, respectively.}
 \item{tBAM_fn}{A character string specifying the full path 
 to the tumor's BAM file.}
 
-\item{bed_centromere_fn}{Centromere regions filename.}
+\item{bed_centromere_fn}{Centromere regions filename. This should
+be tab delimited without headers containing columns contig (e.g. 'chr1'),
+start position (e.g. 100), and end position (e.g. 100000).}
 
-\item{dict_chrom_fn}{Chromosome lengths file.}
+\item{dict_chrom_fn}{Chromosome lengths file. This can be
+constructed from the output of 'samtools view -H' applied
+to a bam file.}
 
 \item{qscore_thres}{A numeric value specifying a minimum 
 allowed Qscore or QUAL value for variant calls.}
