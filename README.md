@@ -7,6 +7,9 @@
 ![R](https://img.shields.io/badge/R-%23276DC3.svg?style=square&logo=r&logoColor=pink)
 ![CRAN status](https://www.r-pkg.org/badges/version/UNMASC)
 [![DOI](https://zenodo.org/badge/DOI/10.1093/narcan/zcab040.svg)](https://doi.org/10.1093/narcan/zcab040)
+[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![](https://img.shields.io/github/languages/code-size/pllittle/UNMASC.svg)](https://github.com/pllittle/UNMASC)
+[![](https://img.shields.io/github/last-commit/pllittle/UNMASC.svg)](https://github.com/pllittle/UNMASC/commits/master)
 <!-- badges: end -->
 
 ## What is this for?
