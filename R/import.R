@@ -103,7 +103,8 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	aa = readLines(anno_fn,n = nlines)
 	aa = aa[grepl("^#",aa)]
 	aa = gsub("\"","",aa)
-	bb = aa[grepl("ID=CSQ",aa)]
+	bb = aa[grepl("^##INFO=<ID=CSQ",aa)]
+	if( length(bb) != 1 ) stop("Can't find ID=CSQ line in annotated VCF")
 	bb = strsplit(bb," ")[[1]]
 	bb = bb[grepl("IMPACT",bb)]
 	bb = gsub(">","",bb)
@@ -450,9 +451,11 @@ prep_UNMASC_VCF = function(outdir,DAT,FILTER,target_fn,
 	# Get ANNO
 	anno_rds_fn = file.path(outdir,"anno.rds")
 	if( !file.exists(anno_rds_fn) ){
-		anno = import_ANNO(anno_fn = anno_fn,
-			nlines = nlines,
-			ncores = ncores)
+		anno = tryCatch(import_ANNO(anno_fn = anno_fn,
+			nlines = nlines,ncores = ncores),
+			warning = function(ww){NULL},
+			error = function(ww){NULL})
+		if( is.null(anno) ) stop("Error/Warning with annotation")
 		saveRDS(anno,anno_rds_fn)
 	}
 	anno = readRDS(anno_rds_fn)
