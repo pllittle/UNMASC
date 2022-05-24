@@ -1182,7 +1182,7 @@ BAF_EM_VAF = function(MAT,binom=TRUE,show_dots=TRUE,clust_tVAF=NULL){
 	for(iPSI in iPSI_vec){
 	for(jj in seq(nrow(init_pi))){
 	for(mm0 in vec_pp){
-		tmp_em = Rcpp_BAF_clust(RD = MAT[,c("AD","RD")],DP = MAT[,"DP"],
+		tmp_em = Rcpp_BAF_clust(RD = MAT[,c("AD","RD"),drop = FALSE],DP = MAT[,"DP"],
 			log_DP = MAT[,"log_DP"],LBC = MAT[,"LBC"],props0 = init_pi[jj,],
 			mm0 = mm0,psi0 = iPSI,max_iter = my_max_iter,eps = eps,show = FALSE)
 		if( is.null(em_out) || ( tmp_em$converge == "yes" && tmp_em$BIC > em_out$BIC ) ){
