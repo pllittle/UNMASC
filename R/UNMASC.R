@@ -3648,17 +3648,14 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 	
 	if(FALSE){
 		tumorID = tumorID; outdir = outdir; vcf = vcf
-		tBAM_fn = tBAM_fn; bed_centromere_fn = bed_centromere_fn
-		dict_chrom_fn = dict_chrom_fn; binom = binom
+		tBAM_fn = tBAM_fn; bed_centromere_fn = my_dirs$bed_cent_fn
+		dict_chrom_fn = my_dirs$dict_chrom_fn; binom = binom; gender = gender
+		ncores = ncores
 		
-		tumorID = samp; outdir = outdir; vcf = NULL
-		tBAM_fn = tBAM_fn; bed_centromere_fn = bed_centromere_fn
-		dict_chrom_fn = dict_chrom_fn; binom = binom
+		qscore_thres = 30; exac_thres = 5e-3; ad_thres = 3; 
+		rd_thres = 10; cut_BAF = 5e-2; minBQ = 13; minMQ = 40; 
+		eps_thres = 0.5; psi_thres = 0.02; hg = "19"; ncores = 1
 		
-		# Constants
-		qscore_thres = 30; exac_thres = 5e-3; ad_thres = 5; rd_thres = 10; cut_BAF = 5e-2
-		minBQ = 13; minMQ = 40; hg = 19; gender = NA; eps_thres = 0.5; psi_thres = 0.02
-		ncores = smart_ncores()
 	}
 	
 	cat("% ------------------------------- %\n")
@@ -3687,7 +3684,7 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 		vcf$tDP = rowSums(vcf[,c("tAD","tRD")])
 		vcf = vcf[which(vcf$tDP >= 5 & vcf$nDP >= 5 & vcf$Qscore >= 5),] # lowest tolerated thresholds
 		if( nrow(vcf) < 1e3 ){
-			cat(sprintf("%s: Low variant count after base filtering ...\n",date()))
+			cat(sprintf("%s: LowQCSample = Low variant count after base filtering ...\n",date()))
 			return(NULL)
 		}
 		vcf = vcf[which(vcf$Chr %in% paste0("chr",c(1:22,"X","Y"))),]
@@ -3743,6 +3740,15 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 	strand 	= rds$strand
 	genome 	= rds$genome
 	rm(rds)
+	
+	# Flag low QC samples
+	tab_tumor 	= table(CONTROL = vcf$STUDYNUMBER,Tumor_Depth = vcf$tDP)
+	tab_normal 	= table(CONTROL = vcf$STUDYNUMBER,Normal_Depth = vcf$nDP)
+	if( ncol(tab_tumor) <= 50 ){
+		print(tab_tumor)
+		cat(sprintf("%s: LowQCSample = Low variability in tumor depth\n",date()))
+		return(NULL)
+	}
 	
 	# nSEG
 	nSEG_fn = file.path(outdir,"anno_nSEG.rds")
