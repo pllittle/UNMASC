@@ -1300,9 +1300,10 @@ run_AF_SEG = function(DATA,num_divides,init_seg = NULL,binom = TRUE,
 			tmp_index = which(input_HIST$start == start_pos & input_HIST$end == end_pos)
 			tmp_idx = which(DATA$index >= start_pos & DATA$index <= end_pos)
 			if( is.null(input_HIST) || length(tmp_index) == 0 ){
-				sub_data = DATA[tmp_idx,]
+				sub_data = DATA[tmp_idx,,drop = FALSE]
 				# rownames(sub_data) = NULL
-				tmp_int = curr_BAF_EM_VAF(MAT = as.matrix(sub_data[,c("AD","RD","DP","LBC","log_DP")]))
+				tmp_int = curr_BAF_EM_VAF(MAT = as.matrix(sub_data[,
+					c("AD","RD","DP","LBC","log_DP"),drop = FALSE]))
 				
 				input_HIST = rbind(input_HIST,smart_df(start = start_pos,
 					end = end_pos,LL = tmp_int$LL,ms = tmp_int$ms))
@@ -1322,7 +1323,7 @@ run_AF_SEG = function(DATA,num_divides,init_seg = NULL,binom = TRUE,
 		
 		BIC = 2 * curr_LL - log(nrow(DATA)) * curr_k
 		# BIC = curr_BIC
-		list(BIC=round(BIC,2),HIST=input_HIST)
+		list(BIC = round(BIC,2),HIST = input_HIST)
 	}
 
 	find_new_DIV = function(DATA,SEG,SEG_INT,input_HIST){
