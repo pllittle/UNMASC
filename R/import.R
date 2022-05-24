@@ -94,6 +94,10 @@ import_strelkaVCF = function(vcf_fn,FILTER = NULL,ncores = 1){
 	
 }
 import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
+	if(FALSE){
+		anno_fn = anno_fn; nlines = nlines; ncores = ncores
+		
+	}
 	
 	# Check format
 	aa = readLines(anno_fn,n = nlines)
@@ -124,12 +128,16 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	# Cosmic/legacy ids
 	cat(sprintf("%s: Process COSMIC ...\n",date()))
 	ANNO$CosmicOverlaps = ANNO$CosmicIDs = NA
-	idx = which(grepl("COS",ANNO$INFO)); length(idx)
+	idx = which(grepl("\\|COSV",ANNO$INFO) 
+		| grepl("\\|COSM",ANNO$INFO))
+	length(idx)
+	
 	if( length(idx) == 0 ){
 		cat(sprintf("%s: No COSMIC hits found ...\n",date()))
 	} else {
+		cat(sprintf("%s: %s COSMIC hits found ...\n",date(),length(idx)))
 		tmp_mat = t(sapply(ANNO$INFO[idx],function(xx){
-			# xx = ANNO$INFO[idx][4]; xx
+			# xx = ANNO$INFO[idx][92430]; xx
 			xx2 = strsplit(xx,";")[[1]]
 			xx2 = xx2[grepl("^CSQ=",xx2)]
 			xx2 = strsplit(xx2,"=")[[1]][2]
@@ -423,6 +431,12 @@ import_VCFs = function(DAT,FILTER = NULL,ncores = 1){
 #' @export
 prep_UNMASC_VCF = function(outdir,DAT,FILTER,target_fn,
 	anno_fn,nlines = 100,ncores = 1){
+	if(FALSE){
+		outdir = type_dir; DAT = ndat
+		FILTER = NULL; target_fn = targ_bed_fn
+		anno_fn = anno_fn; nlines = 100; ncores = 1
+		
+	}
 	
 	# Get VCFs
 	vcfs_rds_fn = file.path(outdir,"vcfs.rds")
