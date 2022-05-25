@@ -81,6 +81,9 @@ tbam=; [ -z "$tbam" ] \
 
 ## Source scripts
 
+<details>
+<summary>Click to expand!</summary>
+
 You are welcome to install your own programs and dependencies. I have
 provided below the steps and scripts I use to automate the programs 
 related to UNMASC.
@@ -106,7 +109,12 @@ cd $git_dir
 
 ```
 
+</details>
+
 ## Custom local installations
+
+<details>
+<summary>Click to expand!</summary>
 
 * gcc, libtool, perl, bzip2, xz, zlib, curl, expat, db,
 * HTSlib, VEP, Strelka2
@@ -132,6 +140,8 @@ install_strelka2
 
 If you rely on these functions for installations, these will determine 
 `hts_dir`, `stk2_dir`, and `vep_dir` definitions.
+
+</details>
 
 ## Get COSMIC VCF
 
