@@ -169,6 +169,9 @@ get_COSMIC_canonical -g $genome \
 
 ```
 
+The function definition is located 
+[here](https://github.com/pllittle/baSHic/blob/main/scripts/genomic.sh#L480).
+
 </details>
 
 ## Customized function for Strelka2 + VEP
@@ -178,7 +181,7 @@ get_COSMIC_canonical -g $genome \
 
 Currently, `TO_workflow` is designed for `Strelka2` and `VEP`. If others have
 alternate workflows, you are welcome to inspect this function's 
-[definitions](https://github.com/pllittle/UNMASC/blob/main/workflow/tumor_only.sh)
+[definitions](https://github.com/pllittle/UNMASC/blob/main/workflow/tumor_only.sh#L10)
 to extract specific steps to execute :smile:.
 
 ```Shell
@@ -297,3 +300,6 @@ UNMASC::run_UNMASC(
 ```
 
 </details>
+
+## Outputs
+
