@@ -1,4 +1,4 @@
-# Preparing UNMASC Inputs
+# HowTo UNMASC
 
 ## Outline
 
