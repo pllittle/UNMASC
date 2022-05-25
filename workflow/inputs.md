@@ -8,7 +8,7 @@
 * [Get COSMIC vcf](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#get-cosmic-vcf)
 * [Strelka2 + VEP](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#customized-function-for-strelka2--vep)
 * [Constructing UNMASC's `vcf`](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#preparing-unmascs-vcf)
-* [UNMASC execution](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#unmasc-execution)
+* [UNMASC execution](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#execution)
 * [Outputs](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#outputs)
 
 ## Setting Directories and Variables
@@ -239,7 +239,7 @@ vcf = UNMASC::prep_UNMASC_VCF(
 
 </details>
 
-## UNMASC Execution
+## Execution
 
 <details>
 <summary>Click to expand!</summary>
@@ -307,19 +307,20 @@ UNMASC::run_UNMASC(
 <details>
 <summary>Click to expand!</summary>
 
-Below are the main outputs from UNMASC to determine if
-all steps in UNMASC ran smoothly and to assess if the code 
-requires debugging. If any of these directories or files 
-are missing, check the corresponding Rout file for any error 
-or warning messages or flags for low quality sample information.
+Below are the main outputs from `UNMASC` to determine if
+all steps ran smoothly and to assess if the package or 
+input files requires debugging. If any of these directories 
+or files are missing, check the corresponding Rout file 
+for any error or warning messages or flags for low quality 
+sample information.
 
-* `image.rds`: Stores the comprehensive inputs for UNMASC.
+* `image.rds`: Stores the comprehensive inputs for `UNMASC`.
 Once this file is created, `run_UNMASC()` skips past the 
 time consuming pre-processing of input files. This image 
 can be useful for re-producing results and inspecting errors. 
 To have a clean restart or reset, first remove this file.
 * `nCLUST`: Figures of normal VAF clustering. If three clusters
-of normal VAF are not present, the loci supplied to UNMASC may
+of normal VAF are not present, the loci supplied to `UNMASC` may
 have undergone pre-filtering of the normal VAF.
 * `nSEG`: Figures of normal VAF segmentation. This is useful for 
 visualizing hard-to-map (H2M) regions and whether or not read counts
@@ -327,14 +328,15 @@ should be modeled with a binomial or beta-binomial distribution.
 * `tSEG`: Figures of tumor VAF segmentation. This is useful for
 assessing the degree of sparsity when characterizing the local germline 
 cluster behavior relative to each potential somatic locus. Also
-these figures may prove useful for detecting copy number aberrations.
+these figures may prove useful for inspecting copy number aberrations
+due to allelic imbalance (B allele frequencies deviating from 0.5).
 * `tumor_genotype.tsv`: Experimental output. Attempting to 
 reverse-genotype an individual based on their tumor genomics. Loci
 are annotated with inferred genotypes, H2M status, strand bias, etc. 
 to aid in isolating higher quality genotype calls. May be useful
 for performing genotype PCA or mapping NGS-based sample data to 
 microarray sample data.
-* `tumorOnly_VCs.tsv`: UNMASC's tumor-only variant calls with 
+* `tumorOnly_VCs.tsv`: `UNMASC`'s tumor-only variant calls with 
 comprehensive annotation contained in the `LABEL` column for 
 prioritizing variants. Additional columns contain metrics used
 to construct the `LABEL` columns annotations such as strand bias,
