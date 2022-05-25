@@ -9,6 +9,7 @@
 * [Strelka2 + VEP](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#customized-function-for-strelka2--vep)
 * [Constructing UNMASC's `vcf`](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#preparing-unmascs-vcf)
 * [UNMASC execution](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#unmasc-execution)
+* [Outputs](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#outputs)
 
 ## Setting Directories and Variables
 
@@ -243,7 +244,7 @@ vcf = UNMASC::prep_UNMASC_VCF(
 <details>
 <summary>Click to expand!</summary>
 
-Arguments for `run_UNMASC()` with template inputs.
+Arguments for `run_UNMASC()` with template inputs. 
 
 * `tumorID = "tumor01"`, tumor sample ID
 * `outdir = file.path(".",tumorID)`, output location for the tumor sample
@@ -303,9 +304,14 @@ UNMASC::run_UNMASC(
 
 ## Outputs
 
+<details>
+<summary>Click to expand!</summary>
+
 Below are the main outputs from UNMASC to determine if
 all steps in UNMASC ran smoothly and to assess if the code 
-requires debugging.
+requires debugging. If any of these directories or files 
+are missing, check the corresponding Rout file for any error 
+or warning messages.
 
 * `image.rds`: Stores the comprehensive inputs for UNMASC.
 Once this file is created, `run_UNMASC()` skips past the 
@@ -333,3 +339,5 @@ prioritizing variants. Additional columns contain metrics used
 to construct the `LABEL` columns annotations such as strand bias,
 oxoG artifact, paraffin artifact, H2M status, germline-like loci, 
 etc.
+
+</details>
