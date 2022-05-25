@@ -2,6 +2,9 @@
 
 ## Setting Directories and Variables
 
+<details>
+<summary>Click to expand!</summary>
+
 Below are fixed variables to specify.
 
 ```Shell
@@ -73,6 +76,8 @@ tbam=; [ -z "$tbam" ] \
 	&& return 1
 
 ```
+
+</details>
 
 ## Source scripts
 
