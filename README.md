@@ -12,10 +12,7 @@
 [![](https://img.shields.io/github/last-commit/pllittle/UNMASC.svg)](https://github.com/pllittle/UNMASC/commits/master)
 <!-- badges: end -->
 
-## What is this for?
-
-<details>
-<summary>Click to expand!</summary>
+## What is this?
 
 One goal of cancer genomics is to identify DNA variants specific 
 to the cancer tissue within an individual. Perhaps a researcher 
@@ -51,8 +48,6 @@ Z unmatched normal controls. SB = strand bias, SEG = segmentation,
 OXOG = oxoG artifacts, FFPE = paraffin artifacts.</em></p>
 </p>
 
-</details>
-
 ## Description
 
 This package is designed to filter and annotate tumor-only variant calls 
@@ -61,6 +56,7 @@ segmentation to provide the user with a clear characterization of each
 variant when called against a set of unmatched normal controls.
 
 ## Citation
+
 Little, P., Jo, H., [Hoyle, A.](https://github.com/alanhoyle), 
 [Mazul, A.](https://surgery.wustl.edu/people/angela-mazul/), 
 [Zhao, X.](https://github.com/xiaobeizhao), Salazar, A.H., 
@@ -80,7 +76,6 @@ UNMASC: tumor-only variant calling with unmatched normal controls.
 ## Installation
 
 <details>
-
 <summary>Click to expand!</summary>
 
 R/RStudio code to check, install, and load libraries.
@@ -112,7 +107,7 @@ smarter::smart_packDeps(
 
 </details>
 
-## UNMASC inputs
+## Inputs
 
 * annotated variant calls (e.g. Strelka/Strelka2 + VEP)
 * target capture bed file: contains contig, start position, end position columns
@@ -120,7 +115,7 @@ smarter::smart_packDeps(
 * dict_chrom file: Run `samtools view -H tumor.bam` and save the output.
 * tumor bam filename
 
-## Workflow template code for UNMASC inputs
+## Workflow
 
 UNMASC's benchmark samples were run with Strelka. Assuming 
 
@@ -138,60 +133,8 @@ We have instructed VEP to annotate variants with 1000 Genomes population
 allele frequencies, ExAC/gnomAD population allele frequencies, variant transcripts, 
 impacts/consequences, and COSMIC counts with stable and legacy IDs.
 
-Refer to our [documentation](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md) 
-for inputs and steps.
-
-## Prepare UNMASC's annotated VCF
-
-Code below will import merged Strelka2 vcfs, VEP annotation vcf, and target bed file 
-to prepare UNMASC's main `vcf` input R data.frame.
-
-```R
-vcf = prep_UNMASC_VCF(outdir,DAT,FILTER,
-	target_fn,anno_fn,ncores)
-```
-
-## Run UNMASC
-
-<details>
-
-<summary>Click to expand!</summary>
-
-Template code to run UNMASC
-
-```R
-# Example Inputs
-tumorID = "tumor01"
-outdir 	= file.path(".",tumorID)
-vcf     = <a data.frame of required column names, refer to documentation>
-tBAM_fn = "path/to/tumor/bam"
-bed_centromere_fn = "path/to/centromere/start/end/bed/file"
-dict_chrom_fn = "path/to/chromosome/length/file"
-qscore_thres = 30 # Qscore threshold
-exac_thres = 5e-3 # ExAC population allele frequency threshold for germline filtering
-ad_thres = 5
-rd_thres = 10
-cut_BAF = 5e-2
-minBQ = 13
-minMQ = 40
-eps_thres = 0.5
-psi_thres = 0.02
-hg = "19"
-binom = TRUE
-gender = NA
-ncores = 1 # number of threads/cores available
-
-# Package main function
-UNMASC::run_UNMASC(tumorID = tumorID,outdir = outdir,
-	vcf = vcf,tBAM_fn = tBAM_fn,bed_centromere_fn = bed_centromere_fn,
-	dict_chrom_fn = dict_chrom_fn,qscore_thres = qscore_thres,
-	exac_thres = exac_thres,ad_thres = ad_thres,rd_thres = rd_thres,
-	cut_BAF = cut_BAF,minBQ = minBQ,minMQ = minMQ,eps_thres = eps_thres,
-	psi_thres = psi_thres,hg = "19",binom = binom,gender = gender,
-	ncores = ncores)
-```
-
-</details>
+Refer to our [comprehensive documentation](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md) 
+for setup, inputs, and execution.
 
 <!---
 ## Output
