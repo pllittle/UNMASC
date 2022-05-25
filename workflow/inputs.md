@@ -6,7 +6,7 @@
 * [Sourcing Workflow Scripts](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#source-scripts)
 * [Custom Local Installations](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#custom-local-installations)
 * [Get COSMIC vcf](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#get-cosmic-vcf)
-* [`TO_workflow`](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#customized-function-for-strelka2--vep)
+* [TO_workflow](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#to_workflow)
 * [Constructing UNMASC's `vcf`](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#preparing-unmascs-vcf)
 * [Execution](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#execution)
 * [Outputs](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#outputs)
