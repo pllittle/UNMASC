@@ -6,9 +6,9 @@
 * [Sourcing Workflow Scripts](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#source-scripts)
 * [Custom Local Installations](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#custom-local-installations)
 * [Get COSMIC vcf](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#get-cosmic-vcf)
-* [Strelka2 + VEP](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#customized-function-for-strelka2--vep)
+* [`TO_workflow`](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#customized-function-for-strelka2--vep)
 * [Constructing UNMASC's `vcf`](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#preparing-unmascs-vcf)
-* [UNMASC execution](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#execution)
+* [Execution](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#execution)
 * [Outputs](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#outputs)
 
 ## Setting Directories and Variables
@@ -175,7 +175,7 @@ The function definition is located
 
 </details>
 
-## Customized function for Strelka2 + VEP
+## TO_workflow()
 
 <details>
 <summary>Click to expand!</summary>
