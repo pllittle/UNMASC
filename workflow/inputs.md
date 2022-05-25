@@ -303,3 +303,33 @@ UNMASC::run_UNMASC(
 
 ## Outputs
 
+Below are the main outputs from UNMASC to determine if
+all steps in UNMASC ran smoothly and to assess if the code 
+requires debugging.
+
+* `image.rds`: Stores the comprehensive inputs for UNMASC.
+Once this file is created, `run_UNMASC()` skips past the 
+time consuming pre-processing of input files. This image 
+can be useful for re-producing results and inspecting errors. 
+To have a clean restart or reset, first remove this file.
+* `nCLUST`: Figures of normal VAF clustering. If three clusters
+of normal VAF are not present, the loci supplied to UNMASC may
+have undergone pre-filtering of the normal VAF.
+* `nSEG`: Figures of normal VAF segmentation. This is useful for 
+visualizing hard-to-map (H2M) regions and whether or not read counts
+should be modeled with a binomial or beta-binomial distribution.
+* `tSEG`: Figures of tumor VAF segmentation. This is useful for
+assessing the degree of sparsity when characterizing the local germline 
+cluster behavior relative to each locus.
+* `tumor_genotype.tsv`: Experimental output. Attempting to 
+reverse-genotype an individual based on their tumor genomics. Loci
+are annotated with inferred genotypes, H2M status, strand bias, etc. 
+to aid in isolating higher quality genotype calls. May be useful
+for performing genotype PCA or mapping NGS-based sample data to 
+microarray sample data.
+* `tumorOnly_VCs.tsv`: UNMASC's tumor-only variant calls with 
+comprehensive annotation contained in the `LABEL` column for 
+prioritizing variants. Additional columns contain metrics used
+to construct the `LABEL` columns annotations such as strand bias,
+oxoG artifact, paraffin artifact, H2M status, germline-like loci, 
+etc.
