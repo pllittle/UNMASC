@@ -311,7 +311,7 @@ Below are the main outputs from UNMASC to determine if
 all steps in UNMASC ran smoothly and to assess if the code 
 requires debugging. If any of these directories or files 
 are missing, check the corresponding Rout file for any error 
-or warning messages.
+or warning messages or flags for low quality sample information.
 
 * `image.rds`: Stores the comprehensive inputs for UNMASC.
 Once this file is created, `run_UNMASC()` skips past the 
@@ -326,7 +326,8 @@ visualizing hard-to-map (H2M) regions and whether or not read counts
 should be modeled with a binomial or beta-binomial distribution.
 * `tSEG`: Figures of tumor VAF segmentation. This is useful for
 assessing the degree of sparsity when characterizing the local germline 
-cluster behavior relative to each locus.
+cluster behavior relative to each potential somatic locus. Also
+these figures may prove useful for detecting copy number aberrations.
 * `tumor_genotype.tsv`: Experimental output. Attempting to 
 reverse-genotype an individual based on their tumor genomics. Loci
 are annotated with inferred genotypes, H2M status, strand bias, etc. 
