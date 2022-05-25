@@ -3639,13 +3639,19 @@ TO_genotype = function(vcf,outdir,hg,genome,strand,
 #'	By default tumor variant read counts on chromosomes 1 thru 
 #'	22 are segmented. If \code{gender = "FEMALE"}, chromosome X 
 #'	is also segmented.
+#' @param flag_samp_depth_thres A vector of two integers thresholds.
+#'	The first is a count of unique loci achieving a higher total tumor 
+#'	read depth than the second integer specified. For example, if
+#'	\code{flag_samp_depth_thres = c(1000,50)}, then if less than 1000
+#'	unique loci in the tumor have total depths greater than 50, the sample
+#'	is flagged and UNMASC exits.
 #' @param ncores A positive integer for the number of threads to 
 #'	use for calculating strand-specific read counts.
 #' @export
 run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_chrom_fn,
 	qscore_thres = 30,exac_thres = 5e-3,ad_thres = 5,rd_thres = 10,cut_BAF = 5e-2,
 	minBQ = 13,minMQ = 40,eps_thres = 0.5,psi_thres = 0.02,hg = "19",binom = TRUE,
-	gender = NA,ncores = 1){
+	gender = NA,flag_samp_depth_thres = c(1e3,50),ncores = 1){
 	
 	if(FALSE){
 		tumorID = tumorID; outdir = outdir; vcf = vcf
@@ -3655,7 +3661,8 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 		
 		qscore_thres = 30; exac_thres = 5e-3; ad_thres = 3; 
 		rd_thres = 10; cut_BAF = 5e-2; minBQ = 13; minMQ = 40; 
-		eps_thres = 0.5; psi_thres = 0.02; hg = "19"; ncores = 1
+		eps_thres = 0.5; psi_thres = 0.02; hg = "19"; 
+		flag_samp_depth_thres = c(1e3,50); ncores = 1
 		
 	}
 	
@@ -3684,10 +3691,13 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 		vcf$nDP = rowSums(vcf[,c("nAD","nRD")])
 		vcf$tDP = rowSums(vcf[,c("tAD","tRD")])
 		vcf = vcf[which(vcf$tDP >= 5 & vcf$nDP >= 5 & vcf$Qscore >= 5),] # lowest tolerated thresholds
+		
+		# Flagging low QC samples: Method 1
 		if( nrow(vcf) < 1e3 ){
-			cat(sprintf("%s: LowQCSample = Low variant count after base filtering ...\n",date()))
+			cat(sprintf("%s: LowQCSample b/c low variant count after base filtering ...\n",date()))
 			return(NULL)
 		}
+		
 		vcf = vcf[which(vcf$Chr %in% paste0("chr",c(1:22,"X","Y"))),]
 		uvcf = unique(vcf[,c("Chr","Position","Ref","Alt")])
 		uvcf$nChr = factor(uvcf$Chr,levels = paste0("chr",c(1:22,"X","Y")))
@@ -3742,12 +3752,21 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 	genome 	= rds$genome
 	rm(rds)
 	
-	# Flag low QC samples
-	tab_tumor 	= table(CONTROL = vcf$STUDYNUMBER,Tumor_Depth = vcf$tDP)
-	tab_normal 	= table(CONTROL = vcf$STUDYNUMBER,Normal_Depth = vcf$nDP)
+	# Flagging low QC samples: Method 2
+	tab_tumor  = table(CONTROL = vcf$STUDYNUMBER,Tumor_Depth = vcf$tDP)
+	tab_normal = table(CONTROL = vcf$STUDYNUMBER,Normal_Depth = vcf$nDP)
 	if( ncol(tab_tumor) <= 50 ){
 		print(tab_tumor)
-		cat(sprintf("%s: LowQCSample = Low variability in tumor depth\n",date()))
+		cat(sprintf("%s: LowQCSample b/c low variability in tumor depth\n",date()))
+		return(NULL)
+	}
+	
+	# Flagging low QC samples: Method 3
+	num_uniq_IDs = length(unique(vcf$mutID[vcf$tDP >= flag_samp_depth_thres[2]]))
+	if( num_uniq_IDs < flag_samp_depth_thres[1] ){
+		cat(sprintf("%s: LowQCSample b/c %s unique tumor loci, which is less than %s,
+			\tachieve total read depth >= %s\n",date(),
+			num_uniq_IDs,flag_samp_depth_thres[1],flag_samp_depth_thres[2]))
 		return(NULL)
 	}
 	

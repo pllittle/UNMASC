@@ -23,6 +23,7 @@ run_UNMASC(
   hg = "19",
   binom = TRUE,
   gender = NA,
+  flag_samp_depth_thres = c(1000, 50),
   ncores = 1
 )
 }
@@ -97,6 +98,13 @@ Valid inputs are \code{"MALE"} and \code{"FEMALE"}.
 By default tumor variant read counts on chromosomes 1 thru 
 22 are segmented. If \code{gender = "FEMALE"}, chromosome X 
 is also segmented.}
+
+\item{flag_samp_depth_thres}{A vector of two integers thresholds.
+The first is a count of unique loci achieving a higher total tumor 
+read depth than the second integer specified. For example, if
+\code{flag_samp_depth_thres = c(1000,50)}, then if less than 1000
+unique loci in the tumor have total depths greater than 50, the sample
+is flagged and UNMASC exits.}
 
 \item{ncores}{A positive integer for the number of threads to 
 use for calculating strand-specific read counts.}
