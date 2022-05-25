@@ -134,7 +134,7 @@ allele frequencies, ExAC/gnomAD population allele frequencies, variant transcrip
 impacts/consequences, and COSMIC counts with stable and legacy IDs.
 
 Refer to our [comprehensive documentation](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md) 
-for setup, inputs, and execution.
+for setup, inputs, and execution. 
 
 <!---
 ## Output
