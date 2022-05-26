@@ -12,25 +12,35 @@
 * [Outputs](https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#outputs)
 
 ```mermaid
-flowchart LR;
-	tbam{{tumor.bam}} --> nbam1{{normal_1.bam}} & nbam2{{normal_2.bam}} & dots{{...}} & nbamZ{{normal_Z.bam}} --> caller{{Variant Caller}}
-	caller --> vcf1{{vc_1.vcf}} & vcf2{{vc_2.vcf}} & dotsv{{... .vcf}} & vcfZ{{vc_Z.vcf}}
-	fasta{{reference.fasta}} --> caller
-	cosmic{{COSMIC.vcf}} & vcf1 & vcf2 & dotsv & vcfZ --> VEP --> anno{{anno.vcf}}
-	vcf1 & vcf2 & dotsv & vcfZ & anno --> prepU{{prep_UNMASC_VCF}}
-	targ{{target.bed}} --> prepU
-	prepU --> UNMASC{{run_UNMASC}}
-	
-	classDef myred fill:#f44336,stroke:#f3f6f4,stroke-width:2px
-	classDef myblue fill:#19daf8,stroke:#f3f6f4,stroke-width:2px
-	classDef mygreen fill:#79d50d,stroke:#f3f6f4,stroke-width:2px
-	classDef mymagenta fill:#fc9ffc,stroke:#f3f6f4,stroke-width:2px
-	
-	class tbam myred
-	class nbam1,nbam2,dots,nbamZ myblue
-	class fasta mygreen
-	class vcf1,vcf2,dotsv,vcfZ mymagenta
-	
+flowchart LR
+
+tbam{{tumor.bam}} --> nbam1{{normal_1.bam}} & nbam2{{normal_2.bam}} --> caller{{Variant Caller}}
+tbam{{tumor.bam}} --> dots{{...}} & nbamZ{{normal_Z.bam}} --> caller
+fasta{{reference.fasta}} --> caller
+caller --> GATK --> vcf1{{vc_1.vcf}} & vcf2{{vc_2.vcf}} & dotsv{{... .vcf}} & vcfZ{{vc_Z.vcf}}
+cosmic{{COSMIC.vcf}} & vcf1 & vcf2 & dotsv & vcfZ & fasta --> VEP --> anno{{anno.vcf}}
+vcf1 & vcf2 & dotsv & vcfZ & anno & targ{{target.bed}} --> prepU{{"prep_UNMASC_VCF()"}}
+centro{{centromere.bed}} & dictchrom{{dict_chrom.txt}} & prepU --> UNMASC{{"run_UNMASC()"}}
+
+%% class definitions
+classDef myred fill:#f44336,stroke:#f3f6f4,stroke-width:2px
+classDef myblue fill:#19daf8,stroke:#f3f6f4,stroke-width:2px
+classDef mygreen fill:#79d50d,stroke:#f3f6f4,stroke-width:2px
+classDef mymagenta fill:#fc9ffc,stroke:#f3f6f4,stroke-width:2px
+classDef myyellow fill:#f6fa13,stroke:#f3f6f4,stroke-width:2px
+classDef myorange fill:#f89d3e,stroke:#f3f6f4,stroke-width:2px
+
+%% assign classes to nodes
+class tbam myred
+class nbam1,nbam2,dots,nbamZ myblue
+class fasta mygreen
+class vcf1,vcf2,dotsv,vcfZ,anno mymagenta
+class cosmic,targ,centro,dictchrom myyellow
+class caller,GATK,VEP,prepU,UNMASC myorange
+
+%% clickable nodes
+click cosmic "https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#get-cosmic-vcf"
+click VEP "https://uswest.ensembl.org/info/docs/tools/vep/index.html"
 ```
 
 ## Setting Directories and Variables
