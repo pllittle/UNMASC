@@ -17,7 +17,7 @@ flowchart LR
 tbam{{tumor.bam}} --> nbam1{{normal_1.bam}} & nbam2{{normal_2.bam}} --> caller{{Variant Caller}}
 tbam{{tumor.bam}} --> dots{{...}} & nbamZ{{normal_Z.bam}} --> caller
 fasta{{reference.fasta}} --> caller
-caller --> GATK --> vcf1{{vc_1.vcf}} & vcf2{{vc_2.vcf}} & dotsv{{... .vcf}} & vcfZ{{vc_Z.vcf}}
+caller --> GATK{{GATK MergeVcfs}} --> vcf1{{vc_1.vcf}} & vcf2{{vc_2.vcf}} & dotsv{{... .vcf}} & vcfZ{{vc_Z.vcf}}
 cosmic{{COSMIC.vcf}} & vcf1 & vcf2 & dotsv & vcfZ & fasta --> VEP --> anno{{anno.vcf}}
 vcf1 & vcf2 & dotsv & vcfZ & anno & targ{{target.bed}} --> prepU{{"prep_UNMASC_VCF()"}}
 centro{{centromere.bed}} & dictchrom{{dict_chrom.txt}} & prepU --> UNMASC{{"run_UNMASC()"}}
