@@ -13,21 +13,13 @@
 
 ```mermaid
 flowchart LR;
-	tbam{{tumor.bam}} --> nbam1{{normal_1.bam}} --> caller{{Variant Caller}} --> vcf1{{vc_1.vcf}}
-	tbam{{tumor.bam}} --> nbam2{{normal_2.bam}} --> caller{{Variant Caller}} --> vcf2{{vc_2.vcf}}
-	tbam{{tumor.bam}} --> dots{{...}} --> caller{{Variant Caller}} --> dotsv{{... .vcf}}
-	tbam{{tumor.bam}} --> nbamZ{{normal_Z.bam}} --> caller{{Variant Caller}} --> vcfZ{{vc_Z.vcf}}
-	fasta{{reference.fasta}} --> caller{{Variant Caller}}
-	vcf1{{vc_1.vcf}} --> VEP --> anno{{anno.vcf}}
-	vcf2{{vc_2.vcf}} --> VEP --> anno{{anno.vcf}}
-	dotsv{{... .vcf}} --> VEP --> anno{{anno.vcf}}
-	vcfZ{{vc_Z.vcf}} --> VEP --> anno{{anno.vcf}}
-	vcf1{{vc_1.vcf}} & anno{{anno.vcf}} --> prepU{{prep_UNMASC_VCF}}
-	vcf2{{vc_2.vcf}} & anno{{anno.vcf}} --> prepU{{prep_UNMASC_VCF}}
-	dotsv{{... .vcf}} & anno{{anno.vcf}} --> prepU{{prep_UNMASC_VCF}}
-	vcfZ{{vc_Z.vcf}} & anno{{anno.vcf}} --> prepU{{prep_UNMASC_VCF}}
-	targ{{target.bed}} --> prepU{{prep_UNMASC_VCF}}
-	prepU{{prep_UNMASC_VCF}} --> UNMASC{{run_UNMASC}}
+	tbam{{tumor.bam}} --> nbam1{{normal_1.bam}} & nbam2{{normal_2.bam}} & dots{{...}} & nbamZ{{normal_Z.bam}} --> caller{{Variant Caller}}
+	caller --> vcf1{{vc_1.vcf}} & vcf2{{vc_2.vcf}} & dotsv{{... .vcf}} & vcfZ{{vc_Z.vcf}}
+	fasta{{reference.fasta}} --> caller
+	vcf1 & vcf2 & dotsv & vcfZ --> VEP --> anno{{anno.vcf}}
+	vcf1 & vcf2 & dotsv & vcfZ & anno --> prepU{{prep_UNMASC_VCF}}
+	targ{{target.bed}} --> prepU
+	prepU --> UNMASC{{run_UNMASC}}
 ```
 
 ## Setting Directories and Variables
