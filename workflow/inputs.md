@@ -20,6 +20,17 @@ flowchart LR;
 	vcf1 & vcf2 & dotsv & vcfZ & anno --> prepU{{prep_UNMASC_VCF}}
 	targ{{target.bed}} --> prepU
 	prepU --> UNMASC{{run_UNMASC}}
+	
+	classDef myred fill:#f44336,stroke:#f3f6f4,stroke-width:2px
+	classDef myblue fill:#19daf8,stroke:#f3f6f4,stroke-width:2px
+	classDef mygreen fill:#79d50d,stroke:#f3f6f4,stroke-width:2px
+	classDef mymagenta fill:#fc9ffc,stroke:#f3f6f4,stroke-width:2px
+	
+	class tbam myred
+	class nbam1,nbam2,dots,nbamZ myblue
+	class fasta mygreen
+	class vcf1,vcf2,dotsv,vcfZ mymagenta
+	
 ```
 
 ## Setting Directories and Variables
