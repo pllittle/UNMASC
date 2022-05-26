@@ -16,7 +16,7 @@ flowchart LR;
 	tbam{{tumor.bam}} --> nbam1{{normal_1.bam}} & nbam2{{normal_2.bam}} & dots{{...}} & nbamZ{{normal_Z.bam}} --> caller{{Variant Caller}}
 	caller --> vcf1{{vc_1.vcf}} & vcf2{{vc_2.vcf}} & dotsv{{... .vcf}} & vcfZ{{vc_Z.vcf}}
 	fasta{{reference.fasta}} --> caller
-	vcf1 & vcf2 & dotsv & vcfZ --> VEP --> anno{{anno.vcf}}
+	cosmic{{COSMIC.vcf}} & vcf1 & vcf2 & dotsv & vcfZ --> VEP --> anno{{anno.vcf}}
 	vcf1 & vcf2 & dotsv & vcfZ & anno --> prepU{{prep_UNMASC_VCF}}
 	targ{{target.bed}} --> prepU
 	prepU --> UNMASC{{run_UNMASC}}
