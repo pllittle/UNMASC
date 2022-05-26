@@ -39,6 +39,7 @@ class cosmic,targ,centro,dictchrom myyellow
 class caller,GATK,VEP,prepU,UNMASC myorange
 
 %% clickable nodes
+click GATK "https://github.com/broadinstitute/gatk"
 click cosmic "https://github.com/pllittle/UNMASC/blob/main/workflow/inputs.md#get-cosmic-vcf"
 click VEP "https://uswest.ensembl.org/info/docs/tools/vep/index.html"
 ```
