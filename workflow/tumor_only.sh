@@ -2,8 +2,8 @@
 
 [ -z "$git_dir" ] && git_dir=$(cd $(dirname $BASH_SOURCE)/../..; pwd)
 
-for fn in base colors getEnv install_python \
-	install_perl genomic; do
+for fn in base colors getEnv install \
+	linux_python linux_perl genomic; do
 	. $git_dir/baSHic/scripts/$fn.sh
 done
 
