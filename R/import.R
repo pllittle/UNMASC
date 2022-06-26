@@ -241,7 +241,9 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 		"5_PRIME_UTR_PREMATURE_START_CODON_GAIN_VARIANT","STOP_RETAINED_VARIANT",
 		"INITIATOR_CODON_VARIANT","RARE_AMINO_ACID_VARIANT","START_RETAINED_VARIANT",
 		"GENE_FUSION","BIDIRECTIONAL_GENE_FUSION","EXON_LOSS_VARIANT",
-		"5_PRIME_UTR_TRUNCATION","INCOMPLETE_TERMINAL_CODON_VARIANT")
+		"5_PRIME_UTR_TRUNCATION","INCOMPLETE_TERMINAL_CODON_VARIANT",
+		"SPLICE_DONOR_5TH_BASE_VARIANT","SPLICE_DONOR_REGION_VARIANT",
+		"SPLICE_POLYPYRIMIDINE_TRACT_VARIANT")
 	poss_nonexonic = c("3_PRIME_UTR_VARIANT","5_PRIME_UTR_VARIANT",
 		"DOWNSTREAM_GENE_VARIANT","INTRON_VARIANT","NMD_TRANSCRIPT_VARIANT",
 		"NON_CODING_TRANSCRIPT_EXON_VARIANT","NON_CODING_TRANSCRIPT_VARIANT",
@@ -455,7 +457,7 @@ prep_UNMASC_VCF = function(outdir,DAT,FILTER,target_fn,
 			nlines = nlines,ncores = ncores),
 			warning = function(ww){NULL},
 			error = function(ww){NULL})
-		if( is.null(anno) ) stop("Error/Warning with annotation")
+		if( is.null(anno) ) stop("Error/Warning with annotation in import_ANNO()")
 		saveRDS(anno,anno_rds_fn)
 	}
 	anno = readRDS(anno_rds_fn)
