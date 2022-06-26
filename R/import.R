@@ -269,6 +269,8 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	smart_table(ANNO$EXONIC)
 	print(tmp_df)
 	if( any(is.na(ANNO$EXONIC)) || any(is.na(tmp_df$EXONIC)) ){
+		print("Refer to https://platform.opentargets.org/variants")
+		print("Need to include more EXONIC/nonEXONIC classifications!")
 		stop("Need to include more EXONIC/nonEXONIC classifications!")
 	}
 	ANNO = smart_rmcols(ANNO,c("snpEff_pt1"))
