@@ -323,6 +323,8 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	ANNO$EXAC_AF = as.numeric(ANNO$EXAC_AF)
 	
 	ANNO = smart_rmcols(ANNO,"INFO")
+	
+	cat(sprintf("%s: Finishing import_ANNO() ...\n",date()))
 	return(ANNO)
 	
 }
@@ -455,11 +457,8 @@ prep_UNMASC_VCF = function(outdir,DAT,FILTER,target_fn,
 	# Get ANNO
 	anno_rds_fn = file.path(outdir,"anno.rds")
 	if( !file.exists(anno_rds_fn) ){
-		anno = tryCatch(import_ANNO(anno_fn = anno_fn,
-			nlines = nlines,ncores = ncores),
-			warning = function(ww){NULL},
-			error = function(ww){NULL})
-		if( is.null(anno) ) stop("Error/Warning with annotation in import_ANNO()")
+		anno = import_ANNO(anno_fn = anno_fn,
+			nlines = nlines,ncores = ncores)
 		saveRDS(anno,anno_rds_fn)
 	}
 	anno = readRDS(anno_rds_fn)
