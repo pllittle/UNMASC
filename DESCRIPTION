@@ -14,4 +14,4 @@ Imports: smarter, data.table, doParallel, foreach, parallel,
 	Rcpp
 LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 3)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
