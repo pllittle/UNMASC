@@ -81,16 +81,16 @@ UNMASC: tumor-only variant calling with unmatched normal controls.
 R/RStudio code to check, install, and load libraries.
 
 ```R
-pandoc				= Sys.getenv("RSTUDIO_PANDOC")
-build_vign 		= !is.null(pandoc) && file.exists(pandoc)
+pandoc = Sys.getenv("RSTUDIO_PANDOC")
+build_vign = !is.null(pandoc) && file.exists(pandoc)
 
-cran_packs 		= c("devtools","Rcpp","RcppArmadillo","emdbook",
-								"scales","BiocManager","parallel","doParallel",
-								"data.table","grDevices","foreach")
-bioc_packs 		= c("seqTools","Rsamtools","GenomicRanges",
-								"IRanges")
-github_packs 	= c("smarter","UNMASC")
-req_packs 		= c(cran_packs,bioc_packs,github_packs)
+cran_packs = c("devtools","Rcpp","RcppArmadillo","emdbook",
+	"scales","BiocManager","parallel","doParallel",
+	"data.table","grDevices","foreach")
+bioc_packs = c("seqTools","Rsamtools","GenomicRanges",
+	"IRanges")
+github_packs = c("smarter","UNMASC")
+req_packs = c(cran_packs,bioc_packs,github_packs)
 
 for(pack in req_packs){
 	
