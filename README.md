@@ -19,7 +19,7 @@ to the cancer tissue within an individual. Perhaps a researcher
 would like to identify mutated genes and design a cancer treatment 
 or therapy specific to that individual's cancer. These cancer 
 variants are considered **somatic** or variants that cannot be 
-inherited. Our normal tissue harbors inherited DNA variants called  
+inherited. Our normal tissue harbors inherited DNA variants called 
 **germline** variants that are present and identical across all 
 normal tissue. 
 
