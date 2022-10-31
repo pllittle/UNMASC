@@ -81,27 +81,37 @@ UNMASC: tumor-only variant calling with unmatched normal controls.
 R/RStudio code to check, install, and load libraries.
 
 ```R
-all_packs = as.character(installed.packages()[,1])
-pandoc = Sys.getenv("RSTUDIO_PANDOC")
-build_vign = !is.null(pandoc) && file.exists(pandoc)
+pandoc				= Sys.getenv("RSTUDIO_PANDOC")
+build_vign 		= !is.null(pandoc) && file.exists(pandoc)
 
-if( !("smarter" %in% all_packs) ){
-	stop("Check https://github.com/pllittle/smarter for installation")
+cran_packs 		= c("devtools","Rcpp","RcppArmadillo","emdbook",
+								"scales","BiocManager","parallel","doParallel",
+								"data.table","grDevices","foreach")
+bioc_packs 		= c("seqTools","Rsamtools","GenomicRanges",
+								"IRanges")
+github_packs 	= c("smarter","UNMASC")
+req_packs 		= c(cran_packs,bioc_packs,github_packs)
+
+for(pack in req_packs){
+	
+	chk_pack = tryCatch(find.package(pack),
+		error = function(ee){NULL})
+	
+	if( !is.null(chk_pack) ){
+		library(pack,character.only = TRUE)
+		next
+	}
+	
+	if( pack %in% cran_packs ){
+		install.packages(pack,dependencies = TRUE)
+	} else if( pack %in% bioc_packs ){
+		BiocManager::install(pkg = pack,dependencies = TRUE)
+	} else if( pack %in% github_packs ){
+		devtools::install(sprintf("pllittle/%s",pack),
+			dependencies = TRUE)
+	}
+	
 }
-
-library(smarter)
-cran_packs = c("devtools","Rcpp","RcppArmadillo","emdbook",
-	"scales","BiocManager","parallel","doParallel",
-	"data.table","grDevices","foreach")
-bioc_packs = c("seqTools","Rsamtools","GenomicRanges",
-	"IRanges")
-
-smarter::smart_packDeps(
-	cran_packs = cran_packs,
-	bioc_packs = bioc_packs,
-	github_packs = c("pllittle/UNMASC"),
-	pandoc = pandoc,
-	build_vign = build_vign)
 
 ```
 
