@@ -58,7 +58,7 @@ variant when called against a set of unmatched normal controls.
 ## Citation
 
 Little, P., Jo, H., [Hoyle, A.](https://github.com/alanhoyle), 
-[Mazul, A.](https://surgery.wustl.edu/people/angela-mazul/), 
+[Mazul, A.](https://oto.wustl.edu/people/angela-l-mazul-phd/), 
 [Zhao, X.](https://github.com/xiaobeizhao), Salazar, A.H., 
 [Farquhar, D.](https://www.med.unc.edu/ent/directory/douglas-farquhar-md-mph/), 
 [Sheth, S.](https://www.med.unc.edu/medicine/directory/siddharth-sheth-md/), 
