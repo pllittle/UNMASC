@@ -2,9 +2,36 @@
 
 [ -z "$git_dir" ] && git_dir=$(cd $(dirname $BASH_SOURCE)/../..; pwd)
 
+for repo in baSHic copythatdna somdna; do
+	repo_dir=$git_dir/$repo
+	check_array $repo baSHic copythatdna somdna && tmp_url=https://github.com/pllittle/$repo.git
+	
+	while true; do
+		if [ ! -d "$repo_dir" ]; then
+			cd "$git_dir"
+			git clone "$tmp_url" >&2
+			[ $? -eq 0 ] && break
+		else
+			cd "$repo_dir"
+			git pull >&2
+			[ $? -eq 0 ] && break
+		fi
+		echo -e "Some error in cloning $repo, contact pllittle" >&2 && return 1
+	done
+	
+done
+
 for fn in base colors getEnv install linux_latex \
 	linux_python linux_perl genomic; do
 	. $git_dir/baSHic/scripts/$fn.sh
+done
+
+for fn in getCounts; do
+	. $git_dir/copythatdna/scripts/$fn.sh
+done
+
+for fn in callingAllVariants; do
+	. $git_dir/somdna/scripts/$fn.sh
 done
 
 # Tumor-only Workflow, credit to Heejoon Jo
