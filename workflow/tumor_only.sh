@@ -2,9 +2,9 @@
 
 [ -z "$git_dir" ] && git_dir=$(cd $(dirname $BASH_SOURCE)/../..; pwd)
 
-for repo in baSHic copythatdna somdna; do
+for repo in baSHic; do
 	repo_dir=$git_dir/$repo
-	check_array $repo baSHic copythatdna somdna && tmp_url=https://github.com/pllittle/$repo.git
+	tmp_url=https://github.com/pllittle/$repo.git
 	
 	while true; do
 		if [ ! -d "$repo_dir" ]; then
@@ -26,6 +26,26 @@ for fn in base colors getEnv install linux_latex \
 	. $git_dir/baSHic/scripts/$fn.sh
 	[ $? -eq 0 ] && continue
 	echo -e "Error src-ing baSHic's $fn.sh" >&2 && return 1
+done
+
+for repo in copythatdna somdna; do
+	repo_dir=$git_dir/$repo
+	check_array $repo copythatdna somdna UNMASC \
+		&& tmp_url=https://github.com/pllittle/$repo.git
+	
+	while true; do
+		if [ ! -d "$repo_dir" ]; then
+			cd "$git_dir"
+			git clone "$tmp_url" >&2
+			[ $? -eq 0 ] && break
+		else
+			cd "$repo_dir"
+			git pull >&2
+			[ $? -eq 0 ] && break
+		fi
+		echo -e "Some error in cloning $repo, contact pllittle" >&2 && return 1
+	done
+	
 done
 
 for fn in getCounts; do
