@@ -22,16 +22,20 @@ for repo in baSHic copythatdna somdna; do
 done
 
 for fn in base colors getEnv install linux_latex \
-	linux_python linux_perl genomic; do
+	linux_python linux_perl; do
 	. $git_dir/baSHic/scripts/$fn.sh
+	[ $? -eq 0 ] && continue
+	echo -e "Error src-ing baSHic's $fn.sh" >&2 && return 1
 done
 
 for fn in getCounts; do
 	. $git_dir/copythatdna/scripts/$fn.sh
 done
 
-for fn in callingAllVariants; do
+for fn in callingAllVariants genomic; do
 	. $git_dir/somdna/scripts/$fn.sh
+	[ $? -eq 0 ] && continue
+	echo -e "Error src-ing somdna's $fn.sh" >&2 && return 1
 done
 
 # Tumor-only Workflow, credit to Heejoon Jo
