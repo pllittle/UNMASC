@@ -2,6 +2,8 @@
 
 [ -z "$git_dir" ] && git_dir=$(cd $(dirname $BASH_SOURCE)/../..; pwd)
 
+orig_dir=$(pwd)
+
 for repo in baSHic; do
 	repo_dir=$git_dir/$repo
 	tmp_url=https://github.com/pllittle/$repo.git
@@ -57,6 +59,9 @@ for fn in callingAllVariants genomic; do
 	[ $? -eq 0 ] && continue
 	echo -e "Error src-ing somdna's $fn.sh" >&2 && return 1
 done
+
+cd "$orig_dir"
+unset fn orig_dir
 
 # Tumor-only Workflow, credit to Heejoon Jo
 TO_workflow(){
