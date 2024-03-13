@@ -2,27 +2,6 @@
 
 [ -z "$git_dir" ] && git_dir=$(cd $(dirname $BASH_SOURCE)/../..; pwd)
 
-orig_dir=$(pwd)
-
-for repo in baSHic; do
-	repo_dir=$git_dir/$repo
-	tmp_url=https://github.com/pllittle/$repo.git
-	
-	while true; do
-		if [ ! -d "$repo_dir" ]; then
-			cd "$git_dir"
-			git clone "$tmp_url" >&2
-			[ $? -eq 0 ] && break
-		else
-			cd "$repo_dir"
-			git pull >&2
-			[ $? -eq 0 ] && break
-		fi
-		echo -e "Some error in cloning $repo, contact pllittle" >&2 && return 1
-	done
-	
-done
-
 for fn in base colors getEnv install linux_latex \
 	linux_python linux_perl; do
 	. $git_dir/baSHic/scripts/$fn.sh
@@ -54,20 +33,19 @@ for fn in getCounts; do
 	. $git_dir/copythatdna/scripts/$fn.sh
 done
 
-for fn in callingAllVariants genomic; do
+for fn in callingAllVariants; do
 	. $git_dir/somdna/scripts/$fn.sh
 	[ $? -eq 0 ] && continue
 	echo -e "Error src-ing somdna's $fn.sh" >&2 && return 1
 done
 
-cd "$orig_dir"
-unset fn orig_dir
+unset fn
 
 # Tumor-only Workflow, credit to Heejoon Jo
 TO_workflow(){
-	local genome cosm_dir cosm_ver stk_dir gatk_dir vep_dir vep_rel status
-	local nbam nbam2 nbams tbam fasta_fn out_dir cosmic_fn vep_cache
-	local ncores work_dir hts_dir cnt tbam2 cmd
+	local genome cosm_dir cosm_ver stk_dir gatk_dir vep_dir vep_rel cache_type status
+	local cache_dir nbam nbam2 nbams tbam fasta_fn out_dir cosmic_fn species
+	local gnomad_dir gnomad_fn ncores work_dir hts_dir cnt tbam2 cmd
 	
 	while [ ! -z $1 ]; do
 		case $1 in
@@ -123,9 +101,21 @@ TO_workflow(){
 				shift
 				vep_rel="$1"
 				;;
-			-a | --vep_cache )
+			--cache_type )
 				shift
-				vep_cache="$1"
+				cache_type="$1"
+				;;
+			--cache_dir )
+				shift
+				cache_dir="$1"
+				;;
+			--gnomad_dir )
+				shift
+				gnomad_dir="$1"
+				;;
+			--species )
+				shift
+				species="$1"
 				;;
 		esac
 		shift
@@ -143,11 +133,14 @@ TO_workflow(){
 	[ -z $tbam ] 			&& echo "Add -t <tumor bam>" >&2 && return 1
 	[ -z $vep_dir ] 	&& echo "Add -v <vep_dir>" >&2 && return 1
 	[ -z $vep_rel ] 	&& echo "Add -r <vep_rel, VEP release>" >&2 && return 1
-	[ -z $cosm_dir ] 	&& echo "Add -d <COSMIC dir>" >&2 && return 1
+	[ -z "$cosm_dir" ] 	&& echo "Add -d <COSMIC dir>" >&2 && return 1
 	[ -z $cosm_ver ] 	&& echo "Add -e <COSMIC version, e.g. 94, 95>" >&2 && return 1
-	[ -z $vep_cache ] && echo "Add -a <VEP cache, e.g. vep, refseq, merged>" >&2 && return 1
+	[ -z "$cache_type" ] && echo "Add --cache_type <VEP cache, e.g. vep, refseq, merged>" >&2 && return 1
+	[ -z "$cache_dir" ] && echo "Add --cache_dir <dir>" >&2 && return 1
+	[ -z "$gnomad_dir" ] && echo "Add --gnomad_dir <dir>" >&2 && return 1
+	[ -z "$species" ] && species=homo_sapiens
 	
-	check_array $vep_cache vep refseq merged
+	check_array $cache_type vep refseq merged
 	[ ! $? -eq 0 ] && echo "Error: VEP cache should be vep, refseq, or merged" >&2 && return 1
 	
 	new_mkdir $out_dir
@@ -186,18 +179,31 @@ TO_workflow(){
 	rm $out_dir/somatic_*.txt
 	
 	# Get COSMIC if missing
-	cosmic_fn=$cosm_dir/CosmicCodingMuts_${genome}_v${cosm_ver}_canonical.vcf.gz
-	if [ ! -f $cosmic_fn ]; then
+	cosmic_fn="$cosm_dir/CosmicCodingMuts_${genome}_v${cosm_ver}_canonical.vcf.gz"
+	if [ ! -f "$cosmic_fn" ]; then
 		cmd="get_COSMIC_canonical -g $genome -v $cosm_ver"
-		cmd="$cmd -c $cosm_dir -h $hts_dir"
+		cmd="$cmd -c \"$cosm_dir\" -h \"$hts_dir\""
 		echo -e "Run this command to get the COSMIC vcf:\n\n\t${purple}${cmd}${NC}\n" >&2
 		return 1
 	fi
 	
+	# Check gnomad file
+	gnomad_fn=$gnomad_dir/gnomad.genomes.r2.0.1.sites.noVEP.$species.$genome.vcf.gz
+	[ ! -f "$gnomad_fn" ] && echo -e "$gnomad_fn missing" >&2 && return 1
+	
 	# Run VEP
-	run_VEP -c $cosmic_fn -f $fasta_fn -g $genome \
-		-i $out_dir/allvar.vcf -n 1 -o $out_dir/allvar_ann.vcf \
-		-v $vep_dir -r $vep_rel -a $vep_cache
+	run_VEP -c "$cosmic_fn" \
+		-a "$gnomad_fn" \
+		-s "$species" \
+		-f "$fasta_fn" \
+		-g $genome \
+		-i "$out_dir/allvar.vcf" \
+		-n $ncores \
+		-o "$out_dir/allvar_ann.vcf" \
+		-v "$vep_dir" \
+		-r "$vep_rel" \
+		-h "$cache_dir" \
+		-t "$cache_type"
 	[ ! $? -eq 0 ] && echo "Error with VEP" >&2 && return 1
 	new_rm $out_dir/allvar.vcf
 	
