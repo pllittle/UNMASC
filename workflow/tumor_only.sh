@@ -19,10 +19,10 @@ for repo in copythatdna somdna; do
 			cd "$git_dir"
 			git clone "$tmp_url" >&2
 			[ $? -eq 0 ] && break
-		else
-			cd "$repo_dir"
-			git pull >&2
-			[ $? -eq 0 ] && break
+		# else
+			# cd "$repo_dir"
+			# git pull >&2
+			# [ $? -eq 0 ] && break
 		fi
 		echo -e "Some error in cloning $repo, contact pllittle" >&2 && return 1
 	done
