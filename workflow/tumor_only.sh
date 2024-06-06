@@ -14,18 +14,10 @@ for repo in copythatdna somdna; do
 	check_array $repo copythatdna somdna UNMASC \
 		&& tmp_url=https://github.com/pllittle/$repo.git
 	
-	while true; do
-		if [ ! -d "$repo_dir" ]; then
-			cd "$git_dir"
-			git clone "$tmp_url" >&2
-			[ $? -eq 0 ] && break
-		# else
-			# cd "$repo_dir"
-			# git pull >&2
-			# [ $? -eq 0 ] && break
-		fi
-		echo -e "Some error in cloning $repo, contact pllittle" >&2 && return 1
-	done
+	if [ ! -d "$repo_dir" ]; then
+		cd "$git_dir"
+		git clone "$tmp_url" >&2
+	fi
 	
 done
 
