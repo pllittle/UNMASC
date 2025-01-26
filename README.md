@@ -57,13 +57,17 @@ variant when called against a set of unmatched normal controls.
 
 ## Citation
 
-Little, P., Jo, H., [Hoyle, A.](https://github.com/alanhoyle), 
+Little, P., 
+[Jo, H.](https://www.linkedin.com/in/heejoon-jo-75b83295), 
+[Hoyle, A.](https://github.com/alanhoyle), 
 [Mazul, A.](https://oto.wustl.edu/people/angela-l-mazul-phd/), 
-[Zhao, X.](https://github.com/xiaobeizhao), Salazar, A.H., 
+[Zhao, X.](https://github.com/xiaobeizhao), 
+[Salazar, A.H.](https://www.linkedin.com/in/ashley-salazar-9b641867), 
 [Farquhar, D.](https://www.med.unc.edu/ent/directory/douglas-farquhar-md-mph/), 
 [Sheth, S.](https://www.med.unc.edu/medicine/directory/siddharth-sheth-md/), 
 [Masood, M.](https://www.linkedin.com/in/maheer-masood-03661685), 
-Hayward, M.C., Parker, J.S., 
+[Hayward, M.C.](https://www.linkedin.com/in/michele-hayward-2ba44717), 
+[Parker, J.S.](https://www.linkedin.com/in/joel-parker-science), 
 [Hoadley, K.A.](https://unclineberger.org/directory/katherine-hoadley/), 
 [Zevallos, J.](https://www.linkedin.com/in/jpzevallosmd) and 
 [Hayes, D.N.](https://hayeslab.lab.uthsc.edu/) (2021). 
@@ -72,6 +76,10 @@ UNMASC: tumor-only variant calling with unmatched normal controls.
 [[HTML](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329), 
 [PDF](https://academic.oup.com/narcancer/article-pdf/3/4/zcab040/40514892/zcab040.pdf), 
 [Supplement](https://academic.oup.com/narcancer/article/3/4/zcab040/6382329#supplementary-data)]
+
+```R
+citation("UNMASC")
+```
 
 ## Installation
 
