@@ -158,7 +158,7 @@ done
 # Source functions
 
 for fn in genomic callingAllVariants; do
-	. "$git_dir/somdna/scripts/genomic.sh"
+	. "$git_dir/somdna/scripts/$fn.sh"
 	[ $? -eq 0 ] && continue
 	echo -e "Some error in sourcing somdna's $fn.sh" >&2
 	return 1
