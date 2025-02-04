@@ -133,24 +133,37 @@ provided below the steps and scripts I use to automate the programs
 related to UNMASC.
 
 ```Shell
-# Pull my functions
+# Load dependencies
 
-cd $git_dir
-[ ! -d baSHic ] && git clone https://github.com/pllittle/baSHic.git >&2
-[ -d baSHic ] && cd baSHic && git pull >&2
+odir=$(pwd)
 
-cd $git_dir
-[ ! -d UNMASC ] && git clone https://github.com/pllittle/UNMASC.git >&2
-[ -d UNMASC ] && cd UNMASC && git pull >&2
+for repo in baSHic UNMASC somdna; do
+	
+	repo_dir="$git_dir/$repo"
+	
+	if [ ! -d "$repo_dir" ]; then
+		git clone https://github.com/pllittle/$repo.git >&2
+		[ $? -eq 0 ] && continue
+	else
+		cd "$repo_dir"
+		git pull >&2
+		[ $? -eq 0 ] && continue
+	fi
+	echo -e "Error cloning/pulling $repo" >&2
+	return 1
+	
+done
 
 # Source functions
 
-. $git_dir/baSHic/scripts/genomic.sh
+. "$git_dir/somdna/scripts/genomic.sh"
 [ ! $? -eq 0 ] && echo "Some error in sourcing genomic.sh" >&2 && return 1
 
-. $git_dir/UNMASC/workflow/tumor_only.sh
+. "$git_dir/UNMASC/workflow/tumor_only.sh"
 [ ! $? -eq 0 ] && echo "Some error in sourcing tumor_only.sh" >&2 && return 1
 
+cd "$odir"
+unset odir repo repo_dir
 ```
 
 </details>
