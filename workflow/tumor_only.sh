@@ -4,34 +4,51 @@
 
 for fn in base colors getEnv install linux_latex \
 	linux_python linux_perl; do
-	. $git_dir/baSHic/scripts/$fn.sh
+	. "$git_dir/baSHic/scripts/$fn.sh"
 	[ $? -eq 0 ] && continue
-	echo -e "Error src-ing baSHic's $fn.sh" >&2 && return 1
+	echo -e "Error src-ing baSHic's $fn.sh" >&2
+	return 1
 done
 
-for repo in copythatdna somdna; do
-	repo_dir=$git_dir/$repo
-	check_array $repo copythatdna somdna UNMASC \
-		&& tmp_url=https://github.com/pllittle/$repo.git
+odir=$(pwd)
+
+for repo in copythatdna somdna UNMASC; do
+	
+	repo_dir="$git_dir/$repo"
+	tmp_url=https://github.com/pllittle/$repo.git
 	
 	if [ ! -d "$repo_dir" ]; then
 		cd "$git_dir"
 		git clone "$tmp_url" >&2
+		[ $? -eq 0 ] && continue
+	else
+		cd "$repo_dir"
+		git pull >&2
+		[ $? -eq 0 ] && continue
 	fi
+	
+	echo -e "Error clone/pull $repo" >&2
+	return 1
 	
 done
 
+cd "$odir"
+
 for fn in getCounts; do
-	. $git_dir/copythatdna/scripts/$fn.sh
+	. "$git_dir/copythatdna/scripts/$fn.sh"
+	[ $? -eq 0 ] && continue
+	echo -e "Error src-ing copythatdna's $fn.sh" >&2
+	return 1
 done
 
 for fn in callingAllVariants; do
-	. $git_dir/somdna/scripts/$fn.sh
+	. "$git_dir/somdna/scripts/$fn.sh"
 	[ $? -eq 0 ] && continue
-	echo -e "Error src-ing somdna's $fn.sh" >&2 && return 1
+	echo -e "Error src-ing somdna's $fn.sh" >&2
+	return 1
 done
 
-unset fn
+unset fn repo repo_dir
 
 # Tumor-only Workflow, credit to Heejoon Jo
 TO_workflow(){

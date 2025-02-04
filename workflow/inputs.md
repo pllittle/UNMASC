@@ -142,6 +142,7 @@ for repo in baSHic UNMASC somdna; do
 	repo_dir="$git_dir/$repo"
 	
 	if [ ! -d "$repo_dir" ]; then
+		cd "$git_dir"
 		git clone https://github.com/pllittle/$repo.git >&2
 		[ $? -eq 0 ] && continue
 	else
@@ -156,8 +157,12 @@ done
 
 # Source functions
 
-. "$git_dir/somdna/scripts/genomic.sh"
-[ ! $? -eq 0 ] && echo "Some error in sourcing genomic.sh" >&2 && return 1
+for fn in genomic callingAllVariants; do
+	. "$git_dir/somdna/scripts/genomic.sh"
+	[ $? -eq 0 ] && continue
+	echo -e "Some error in sourcing somdna's $fn.sh" >&2
+	return 1
+done
 
 . "$git_dir/UNMASC/workflow/tumor_only.sh"
 [ ! $? -eq 0 ] && echo "Some error in sourcing tumor_only.sh" >&2 && return 1
