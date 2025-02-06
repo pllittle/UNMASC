@@ -191,7 +191,7 @@ To open the package vignette, run ```vignette("UNMASC")```.
 
 ## Contact
 
-* [Feel free to reach out](mailto:pllittle321@gmail.com?subject=UNMASC:%20Q%26A)
+* [Feel free to reach out](mailto:pllittle321@gmail.com?subject=UNMASC:%20Q%26A&body=Dear%20Dr.%20Little,%0A%0A%0A)
 
 ## FAQs
 
