@@ -12,6 +12,17 @@
 [![](https://img.shields.io/github/last-commit/pllittle/UNMASC.svg)](https://github.com/pllittle/UNMASC/commits/master)
 <!-- badges: end -->
 
+## Table of Contents
+
+* [What is this?](#what-is-this)
+* [Description](#description)
+* [Citation](#citation)
+* [Installation](#installation)
+* [Inputs](#inputs)
+* [Workflow](#workflow)
+* [Future Directions](#future-directions)
+* [Contact](#contact)
+
 ## What is this?
 
 One goal of cancer genomics is to identify DNA variants specific 
@@ -169,7 +180,7 @@ To open the package vignette, run ```vignette("UNMASC")```.
 
 -->
 
-## Future directions
+## Future Directions
 
 * Workflow containers
 * Develop sample code and pipeline for
@@ -177,6 +188,10 @@ To open the package vignette, run ```vignette("UNMASC")```.
 	* ANNOVAR annotation code
 * Applying UNMASC toward circulating plasma tumor cell DNA
 * Identifying somatic mutations missed by tumors with matched normals
+
+## Contact
+
+* [Feel free to reach out](mailto:pllittle321@gmail.com?subject=UNMASC:%20Q%26A)
 
 ## FAQs
 
