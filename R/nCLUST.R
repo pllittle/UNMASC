@@ -74,9 +74,9 @@ run_nCLUST = function(vcf,ID = "STUDYNUMBER",rd_thres,ad_thres,
 	out = c(); SE = c(); cnt = 1
 	if( verbose ){
 		if( binom ){
-			cat("Clustering normal read counts assuming binomial mixture ...\n")
+			message("Clustering normal read counts assuming binomial mixture ...\n",appendLF = FALSE)
 		} else {
-			cat("Clustering normal read counts assuming beta-binomial mixture ...\n")
+			message("Clustering normal read counts assuming beta-binomial mixture ...\n",appendLF = FALSE)
 		}
 	}
 	
@@ -88,8 +88,8 @@ run_nCLUST = function(vcf,ID = "STUDYNUMBER",rd_thres,ad_thres,
 	for(id in IDs){
 		# id = IDs[1]; id
 		if( verbose ){
-			cat(sprintf("%s ",id))
-			if( cnt > 0 && cnt %% 5 == 0 ) cat("\n")
+			message(sprintf("%s ",id),appendLF = FALSE)
+			if( cnt > 0 && cnt %% 5 == 0 ) message("\n",appendLF = FALSE)
 		}
 		sn_filter = vcf[[ID]] == id
 		
@@ -150,7 +150,7 @@ run_nCLUST = function(vcf,ID = "STUDYNUMBER",rd_thres,ad_thres,
 		SE = rbind(SE,smart_df(STUDYNUMBER = id,nSeqError))
 		cnt = cnt + 1
 	}
-	if( verbose ) cat("\n")
+	if( verbose ) message("\n",appendLF = FALSE)
 	
 	if( ID != "STUDYNUMBER" ) SE = name_change(SE,"STUDYNUMBER",ID)
 	

@@ -20,6 +20,9 @@ are nDP = tDP = 2, Qscore = 3, and contigs = chr1-chr22, chrX, chrY.}
 \item{ncores}{A positive integer for the number of threads to 
 use for calculating strand-specific read counts.}
 }
+\value{
+A R data.frame containing vcf fields
+}
 \description{
 Imports Strelka VCFs containing SNVs and INDELs
 }

@@ -24,6 +24,9 @@ otherwise set to \code{FALSE}.}
 
 \item{show_plots}{Set to \code{TRUE} to plot the simulated output.}
 }
+\value{
+A list containing simulated true segmentation and observed data.
+}
 \description{
 This functions simulates B allele frequencies and 
 illustrates how UNMASC processes normal and tumor read counts 

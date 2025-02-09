@@ -109,6 +109,9 @@ is flagged and UNMASC exits.}
 \item{ncores}{A positive integer for the number of threads to 
 use for calculating strand-specific read counts.}
 }
+\value{
+Null from function. Outputs UNMASC results to files.
+}
 \description{
 This function implements the UNMASC workflow from 
 	processing formatted dataframes of variants toward outputting annotated variants.

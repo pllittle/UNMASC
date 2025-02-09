@@ -12,6 +12,9 @@ UNMASC_definitions(headers = NULL)
 are printed. If a subset of headers are specified, only the subset 
 of header definitions are printed.}
 }
+\value{
+Null value, prints definitions to console.
+}
 \description{
 This function prints the column header definitions of 
 the output file \code{tumorOnly_VCs.tsv}.

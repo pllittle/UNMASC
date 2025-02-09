@@ -36,11 +36,9 @@ import_strelkaVCF = function(vcf_fn,FILTER = NULL,ncores = 1){
 	tmp_df$Qscore[idx_bs] = as.integer(gsub("QSS_NT=","",
 		sapply(tmp_df$INFO[idx_bs],function(xx) strsplit(xx,";")[[1]][chk_elem_QSS_NT],
 		USE.NAMES = FALSE)))
-	# cat("  ")
 	bases = c("A","C","G","T")
 	for(base in bases){
 		# base = bases[1]; base
-		# cat(sprintf("%s",base))
 		if( base == "A" ){
 			sub_idx = grep("^AU",strsplit(tmp_df$FORMAT[first_bs],":")[[1]])
 		} else if( base == "C" ){
@@ -61,7 +59,6 @@ import_strelkaVCF = function(vcf_fn,FILTER = NULL,ncores = 1){
 			function(xx) strsplit(strsplit(xx,":")[[1]][sub_idx],",")[[1]][1],USE.NAMES = FALSE))
 		tmp_df$nRD[idx_ref_base] = as.integer(sapply(tmp_df$NORMAL[idx_ref_base],
 			function(xx) strsplit(strsplit(xx,":")[[1]][sub_idx],",")[[1]][1],USE.NAMES = FALSE))
-		# if( base == "T" ) cat("\n")
 	}
 	
 	idx_indel = !idx_bs
@@ -112,11 +109,11 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 		bb[1] != "IMPACT|Consequence|SYMBOL|HGVSc|HGVSp|AF|gnomAD_AF|COSMIC|COSMIC_CNT|COSMIC_LEGACY_ID" )
 		stop("Annotation file may not be correctly processed")
 	
-	cat(sprintf("%s: Import annotation file ...\n",date()))
+	message(sprintf("%s: Import annotation file ...\n",date()),appendLF = FALSE)
 	ANNO = fread(anno_fn,sep = "\t",header = TRUE,
 		skip = "#CHROM",nThread = ncores,data.table = FALSE)
 	
-	cat(sprintf("%s: Parse annotation ...\n",date()))
+	message(sprintf("%s: Parse annotation ...\n",date()),appendLF = FALSE)
 	
 	# Extract out annotations
 	ANNO = name_change(ANNO,"#CHROM","Chr")
@@ -127,16 +124,16 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	ANNO = ANNO[which(ANNO$Chr %in% paste0("chr",c(1:22,"X","Y"))),]
 	
 	# Cosmic/legacy ids
-	cat(sprintf("%s: Process COSMIC ...\n",date()))
+	message(sprintf("%s: Process COSMIC ...\n",date()),appendLF = FALSE)
 	ANNO$CosmicOverlaps = ANNO$CosmicIDs = NA
 	idx = which(grepl("\\|COSV",ANNO$INFO) 
 		| grepl("\\|COSM",ANNO$INFO))
 	length(idx)
 	
 	if( length(idx) == 0 ){
-		cat(sprintf("%s: No COSMIC hits found ...\n",date()))
+		message(sprintf("%s: No COSMIC hits found ...\n",date()),appendLF = FALSE)
 	} else {
-		cat(sprintf("%s: %s COSMIC hits found ...\n",date(),length(idx)))
+		message(sprintf("%s: %s COSMIC hits found ...\n",date(),length(idx)),appendLF = FALSE)
 		tmp_mat = t(sapply(ANNO$INFO[idx],function(xx){
 			# xx = ANNO$INFO[idx][92430]; xx
 			xx2 = strsplit(xx,";")[[1]]
@@ -175,7 +172,7 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	ANNO$CosmicOverlaps[is.na(ANNO$CosmicOverlaps)] = 0
 	ANNO$CosmicIDs[is.na(ANNO$CosmicIDs)] = ""
 	
-	cat(sprintf("%s: Process snpEff/Impact ...\n",date()))
+	message(sprintf("%s: Process snpEff/Impact ...\n",date()),appendLF = FALSE)
 	tmp_mat = t(sapply(ANNO$INFO,function(xx){
 		# xx = ANNO$INFO[1]
 		xx2 = strsplit(xx,";")[[1]]
@@ -207,7 +204,7 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	ANNO = cbind(ANNO,tmp_mat); rm(tmp_mat)
 	smart_table(ANNO$IMPACT)
 	
-	cat(sprintf("%s: Process snpEff_pt1 ...\n",date()))
+	message(sprintf("%s: Process snpEff_pt1 ...\n",date()),appendLF = FALSE)
 	ANNO$snpEff_pt1 = sapply(ANNO$snpEff,function(xx){
 		# xx = ANNO$snpEff[1]
 		xx2 = strsplit(xx,",")[[1]]
@@ -233,7 +230,7 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	# Prioritizing variants: 
 	#		https://www.targetvalidation.org/variants
 	# 	https://pcingola.github.io/SnpEff/se_inputoutput/#effect-prediction-details
-	cat(sprintf("%s: Process EXONIC ...\n",date()))
+	message(sprintf("%s: Process EXONIC ...\n",date()),appendLF = FALSE)
 	poss_exonic = c("CODING_SEQUENCE_VARIANT","INFRAME_DELETION",
 		"MISSENSE_VARIANT","SPLICE_ACCEPTOR_VARIANT","SPLICE_DONOR_VARIANT",
 		"SPLICE_REGION_VARIANT","START_LOST","STOP_GAINED","STOP_LOST",
@@ -275,7 +272,7 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	}
 	ANNO = smart_rmcols(ANNO,c("snpEff_pt1"))
 	
-	cat(sprintf("%s: Process GeneName ...\n",date()))
+	message(sprintf("%s: Process GeneName ...\n",date()),appendLF = FALSE)
 	ANNO$GeneName = sapply(ANNO$snpEff,function(xx){
 		# xx = ANNO$snpEff[1]
 		xx2 = strsplit(xx,",")[[1]]
@@ -286,7 +283,7 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 		paste(xx2,collapse = ",")
 	},USE.NAMES = FALSE)
 	
-	cat(sprintf("%s: Process ThsdG_AF ...\n",date()))
+	message(sprintf("%s: Process ThsdG_AF ...\n",date()),appendLF = FALSE)
 	ANNO$ThsdG_AF = sapply(ANNO$INFO,function(xx){
 		# xx = ANNO$INFO[1]
 		xx2 = strsplit(xx,";")[[1]]
@@ -302,7 +299,7 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	ANNO$ThsdG_AF[which(ANNO$ThsdG_AF == "")] = 0
 	ANNO$ThsdG_AF = as.numeric(ANNO$ThsdG_AF)
 	
-	cat(sprintf("%s: Process EXAC_AF ...\n",date()))
+	message(sprintf("%s: Process EXAC_AF ...\n",date()),appendLF = FALSE)
 	ANNO$EXAC_AF = sapply(ANNO$INFO,function(xx){
 		# xx = ANNO$INFO[1]
 		xx2 = strsplit(xx,";")[[1]]
@@ -324,13 +321,13 @@ import_ANNO = function(anno_fn,nlines = 100,ncores = 1){
 	
 	ANNO = smart_rmcols(ANNO,"INFO")
 	
-	cat(sprintf("%s: Finishing import_ANNO() ...\n",date()))
+	message(sprintf("%s: Finishing import_ANNO() ...\n",date()),appendLF = FALSE)
 	return(ANNO)
 	
 }
 prep_TARGET = function(TARGET,ANNO){
 	
-	cat(sprintf("%s: Append TARGET ...\n",date()))
+	message(sprintf("%s: Append TARGET ...\n",date()),appendLF = FALSE)
 	req_names = c("Chr","Start","End")
 	smart_reqNames(DATA = TARGET,REQ = req_names)
 	
@@ -366,6 +363,7 @@ prep_TARGET = function(TARGET,ANNO){
 #'	Qscore, and a string of contigs to retain, respectively. Default values
 #'	are nDP = tDP = 2, Qscore = 3, and contigs = chr1-chr22, chrX, chrY.
 #' @inheritParams run_UNMASC
+#' @return A R data.frame containing vcf fields
 #' @export
 import_VCFs = function(DAT,FILTER = NULL,ncores = 1){
 	
@@ -388,7 +386,7 @@ import_VCFs = function(DAT,FILTER = NULL,ncores = 1){
 	vcf = c()
 	
 	for(CNT in DAT$CNT){
-		cat(sprintf("%s: Import vcf normal_%s ...\n",date(),CNT))
+		message(sprintf("%s: Import vcf normal_%s ...\n",date(),CNT),appendLF = FALSE)
 		fn = DAT$FILENAME[DAT$CNT == CNT]
 		tmp_vcf = import_strelkaVCF(vcf_fn = fn,
 			FILTER = NULL,ncores = ncores)
@@ -407,8 +405,7 @@ import_VCFs = function(DAT,FILTER = NULL,ncores = 1){
 			),]
 		
 		if( nrow(tmp_vcf) == 0 ){
-			cat(smart_sprintf("%s: Skipping normal_%s b/c 
-				no variants after basic/low filtering\n",date(),CNT))
+			message(smart_sprintf("%s: Skipping normal_%s b/c no variants after basic/low filtering\n",date(),CNT),appendLF = FALSE)
 			CNT = CNT + 1
 			next
 		}
@@ -435,6 +432,7 @@ import_VCFs = function(DAT,FILTER = NULL,ncores = 1){
 #'	read in from the \code{anno_fn} to assess the expected formatting.
 #' @inheritParams run_UNMASC
 #' @inheritParams import_VCFs
+#' @return A R data.frame containing VCF fields and annotation.
 #' @export
 prep_UNMASC_VCF = function(outdir,DAT,FILTER,target_fn,
 	anno_fn,nlines = 100,ncores = 1){
@@ -477,7 +475,7 @@ prep_UNMASC_VCF = function(outdir,DAT,FILTER,target_fn,
 	dim(target); target[1:10,]
 	anno = prep_TARGET(TARGET = target,ANNO = anno)
 	
-	cat(sprintf("%s: Merge vcf and anno ...\n",date()))
+	message(sprintf("%s: Merge vcf and anno ...\n",date()),appendLF = FALSE)
 	final_vcf = smart_merge(vcfs,anno)
 	
 	return(final_vcf)

@@ -48,6 +48,13 @@ to constitute a segment.}
 \item{min_nUniqIdx_pSeg}{An integer for the minimum number of unique
 indices per segment.}
 }
+\value{
+List of segmentation results. Object \code{INFER} is a data.frame 
+of segment-specific metrics. Object \code{BIC} contains the 
+Bayesian Information Criterion for the overall segmentation.
+Object \code{SEG} is a numeric vector representing the indices of 
+	segment start and ends.
+}
 \description{
 This function performs normal and tumor variant
 allele frequency segmentation. Rows with allele frequencies 

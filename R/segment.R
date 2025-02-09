@@ -92,6 +92,11 @@ BAF_EM_VAF = function(MAT,binom=TRUE,show_dots=TRUE,clust_tVAF=NULL){
 #'	to constitute a segment.
 #' @param min_nUniqIdx_pSeg An integer for the minimum number of unique
 #'	indices per segment.
+#' @return List of segmentation results. Object \code{INFER} is a data.frame 
+#'	of segment-specific metrics. Object \code{BIC} contains the 
+#'	Bayesian Information Criterion for the overall segmentation.
+#'	Object \code{SEG} is a numeric vector representing the indices of 
+#'		segment start and ends.
 #' @export
 run_AF_SEG = function(DATA,num_divides,init_seg = NULL,binom = TRUE,
 	clust_tVAF = TRUE,show_plot = FALSE,show_mess = FALSE,min_adj_seg = 20,
@@ -297,7 +302,7 @@ run_AF_SEG = function(DATA,num_divides,init_seg = NULL,binom = TRUE,
 						tmp_BIC = max(vec_BIC)
 						SEG = SEG + c(-1,1)[which.max(vec_BIC)]*jj*vec_shift
 						# get_new_seg_BIC(DATA,SEG,input_HIST)$BIC
-						if(show) cat("Adj found!")
+						if(show) message("Adj found!",appendLF = FALSE)
 						# if(show) print(SEG)
 						seg_ADJ = 1
 						seg_ADJ_2 = 1
@@ -397,7 +402,6 @@ run_AF_SEG = function(DATA,num_divides,init_seg = NULL,binom = TRUE,
 	# 3) Run Segmentation
 	global_SEG_INT = 1; iter = 0; prop_thres = 0
 	while( global_SEG_INT <= length(curr_seg) ){
-		# if(iter %% 2 == 0) cat(paste0("Iter = ",iter,"\n"))
 		
 		if(show_plot){
 			plot_SEG(DATA,curr_seg)
@@ -408,7 +412,7 @@ run_AF_SEG = function(DATA,num_divides,init_seg = NULL,binom = TRUE,
 			tmp_num = curr_seg[global_SEG_INT+1] / max(curr_seg)
 			while(TRUE){
 				if( tmp_num >= prop_thres ){
-					cat(paste0(prop_thres*100,"% "))
+					message(paste0(prop_thres*100,"% "),appendLF = FALSE)
 					prop_thres = prop_thres + 0.05
 				} else {
 					break
@@ -419,39 +423,39 @@ run_AF_SEG = function(DATA,num_divides,init_seg = NULL,binom = TRUE,
 		# ADD SEGMENT
 		seg_ADD = 0
 		if(TRUE){
-			if(show_mess) cat("Try ADD: ")
+			if(show_mess) message("Try ADD: ",appendLF = FALSE)
 			list_DIV = find_new_DIV(DATA,curr_seg,global_SEG_INT,hist_LL)
 			hist_LL = list_DIV$HIST
 			curr_seg = list_DIV$SEG
 			seg_ADD = list_DIV$NEW
 			if( seg_ADD == 1 ){
-				if(show_mess) cat("Added segment")
+				if(show_mess) message("Added segment",appendLF = FALSE)
 				global_SEG_INT = max(c(1,global_SEG_INT-1))
 			}
-			if(show_mess) cat("\n")
+			if(show_mess) message("\n",appendLF = FALSE)
 		}
 		
 		# REMOVE SEGMENT
 		seg_DEL = 0
 		if( seg_ADD == 0 && length(curr_seg) > 3 ){
-			if(show_mess) cat("Try DEL: ")
+			if(show_mess) message("Try DEL: ",appendLF = FALSE)
 			list_DEL = find_new_DEL(DATA,curr_seg,hist_LL)
 			hist_LL = list_DEL$HIST
 			curr_seg = list_DEL$SEG
 			seg_DEL = list_DEL$DEL
 			if(seg_DEL == 1){
-				if(show_mess) cat("Removed segment")
+				if(show_mess) message("Removed segment",appendLF = FALSE)
 				# global_SEG_INT = max(c(1,global_SEG_INT-2))
 				global_SEG_INT = max(c(1,min(c(global_SEG_INT-2,list_DEL$SEG_INT-2))))
 				# global_SEG_INT = 1
 			}
-			if(show_mess) cat("\n")
+			if(show_mess) message("\n",appendLF = FALSE)
 		}
 		
 		# ADJUST SEGMENTS
 		seg_ADJ = 0
 		if( seg_ADD == 0 && seg_DEL == 0 && length(curr_seg) > 3 ){
-			if(show_mess) cat("Try ADJ: ")
+			if(show_mess) message("Try ADJ: ",appendLF = FALSE)
 			vec_INTS = seq(global_SEG_INT - 1,global_SEG_INT + 1)
 			vec_INTS = vec_INTS[which(vec_INTS > 1 & vec_INTS < length(curr_seg))]
 			list_ADJ = find_new_ADJ(DATA,curr_seg,hist_LL,vec_INTS,show=show_mess)
@@ -461,7 +465,7 @@ run_AF_SEG = function(DATA,num_divides,init_seg = NULL,binom = TRUE,
 			if(seg_ADJ == 1){
 				global_SEG_INT = max(c(1,global_SEG_INT-2))
 			}
-			if(show_mess) cat("\n")
+			if(show_mess) message("\n",appendLF = FALSE)
 		}
 		
 		# Move to next interval if no updates
@@ -471,7 +475,7 @@ run_AF_SEG = function(DATA,num_divides,init_seg = NULL,binom = TRUE,
 		
 		iter = iter + 1
 	}
-	cat("100%\n")
+	message("100%\n",appendLF = FALSE)
 	
 	out_INFER = infer_SEG(DATA = DATA,SEG = curr_seg,show_plot = show_plot)
 	out_BIC = get_new_seg_BIC(DATA,curr_seg,hist_LL)$BIC
@@ -500,7 +504,7 @@ segment_nVAF = function(DATA,chr,binom = TRUE,
 	input_data = smart_merge(input_data,tmp_df); rm(tmp_df)
 	input_data$pt_cex = 0.5*log10(input_data$DP)
 
-	cat(paste0("\tchr",chr,": "))
+	message(paste0("\tchr",chr,": "),appendLF = FALSE)
 	out_AF_SEG = run_AF_SEG(
 		DATA = input_data,
 		num_divides = 5e1,
@@ -566,7 +570,7 @@ segment_tVAF = function(DATA,chr,binom=TRUE,show_plot=FALSE,show_mess=FALSE,BAF_
 	input_data$index = seq(nrow(input_data))
 	
 	# Run segmentation!!!
-	cat(paste0("\tchr",chr,": "))
+	message(paste0("\tchr",chr,": "),appendLF = FALSE)
 	out_AF_SEG = run_AF_SEG(
 		DATA = input_data,
 		num_divides = 5e1,
@@ -615,7 +619,7 @@ UNMASC_nSEG = function(outdir,vcs,tumorID,hg,genome,binom=TRUE,eps_thres=0.5,psi
 		binom = binom
 	}
 	
-	cat("normal VAF segmentation ...\n")
+	message("normal VAF segmentation ...\n",appendLF = FALSE)
 	anno_all_vcs_nVAF = c()
 	all_nVAF_segs = c()
 	nSEG_dir = file.path(outdir,"nSEG")
@@ -673,7 +677,7 @@ UNMASC_tSEG = function(outdir,tumorID,vcs,strand,gender,cut_BAF,hg,genome,
 		
 	}
 	
-	cat("Subset strand to variants with depth and qscore thresholds and no strand bias ...\n")
+	message("Subset strand to variants with depth and qscore thresholds and no strand bias ...\n",appendLF = FALSE)
 	vcs = vcs[which(vcs$tDP >= rd_thres & vcs$tAD >= ad_thres
 		& vcs$Qscore >= qscore_thres),]
 	mutIDs = unique(vcs$mutID)
@@ -681,16 +685,16 @@ UNMASC_tSEG = function(outdir,tumorID,vcs,strand,gender,cut_BAF,hg,genome,
 	strand = strand[which(is.na(strand$Strand_bias_P) 
 		| strand$Strand_bias_P > 0.05),]
 	
-	cat("Determine OXOG,FFPE,ARTI status ...\n")
+	message("Determine OXOG,FFPE,ARTI status ...\n",appendLF = FALSE)
 	num_uniq_vars = nrow(strand)
-	cat(paste0("Number of unique variants = ",num_uniq_vars,"\n"))
+	message(paste0("Number of unique variants = ",num_uniq_vars,"\n"),appendLF = FALSE)
 	strand$OXOG = NA
 	strand$FFPE = NA
 	strand$ARTI = NA
 	for(ii in seq(num_uniq_vars)){
 		# ii = 1
-		if(ii %% 5e2 == 0) cat(".")
-		if(ii %% 4e4 == 0 || ii == num_uniq_vars ) cat(paste0(ii,"\n"))
+		if(ii %% 5e2 == 0) message(".",appendLF = FALSE)
+		if(ii %% 4e4 == 0 || ii == num_uniq_vars ) message(paste0(ii,"\n"),appendLF = FALSE)
 		mutid_index = which(vcs$mutID == strand$mutID[ii])
 		
 		tmp_tab = smart_table(vcs$OXOG[mutid_index])
@@ -719,7 +723,7 @@ UNMASC_tSEG = function(outdir,tumorID,vcs,strand,gender,cut_BAF,hg,genome,
 		),]
 	vcs = vcs[which(vcs$mutID %in% strand$mutID),]
 	
-	cat("tumor VAF segmentation on variants...\n")
+	message("tumor VAF segmentation on variants...\n",appendLF = FALSE)
 	anno_all_vcs_tVAF = c()
 	all_tVAF_segs = c()
 	tumor_chrs = 1:22

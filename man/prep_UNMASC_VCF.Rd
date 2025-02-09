@@ -41,6 +41,9 @@ read in from the \code{anno_fn} to assess the expected formatting.}
 \item{ncores}{A positive integer for the number of threads to 
 use for calculating strand-specific read counts.}
 }
+\value{
+A R data.frame containing VCF fields and annotation.
+}
 \description{
 A comprehensive function to import VCFs, annotations,
 and target bed file to prepare the necessary VCF for UNMASC's main 

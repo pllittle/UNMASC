@@ -178,8 +178,8 @@ get_max_LL_result = function(DATA,VARS,ID,TRIALS){
 	
 	all_result = list()
 	for(ii in seq(TRIALS)){
-		if( ii %% 2 == 0 ) cat(".")
-		if( ii %% 20 == 0 || ii == TRIALS ) cat(sprintf("%s out of %s\n",ii,TRIALS))
+		if( ii %% 2 == 0 ) message(".",appendLF = FALSE)
+		if( ii %% 20 == 0 || ii == TRIALS ) message(sprintf("%s out of %s\n",ii,TRIALS),appendLF = FALSE)
 		all_result[[ii]] = gauss_unif(DATA = DATA,
 			VARS = VARS,ID = ID)
 	}
@@ -201,10 +201,11 @@ get_max_LL_result = function(DATA,VARS,ID,TRIALS){
 #' @param TRIALS An integer number of times to re-run the EM algorithm,
 #'	more trials help to avoid using a sub-optimal solution.
 #' @param note A character string to label the plot title
+#' @return R data.frame of cluster results and sample labeling.
 #'
 #' @export
 run_hsMetric_clustRank = function(DATA,VARS,ID,TRIALS=50,note=""){
-	if( class(DATA) != "data.frame" ) stop("DATA should be a data.frame")
+	if( !is(object = DATA,class2 = "data.frame") ) stop("DATA should be a data.frame")
 	if( length(VARS) < 2 ) stop("Add more variables")
 	if( any(!(VARS %in% colnames(DATA))) ) stop("Missing columns")
 	
@@ -234,9 +235,9 @@ run_hsMetric_clustRank = function(DATA,VARS,ID,TRIALS=50,note=""){
 	out = DATA[,c(ID,"samp_col","class","prob_outlier","prob_Gaussian","rank")]
 	
 	# Preview
-	cat("Top ranked samples ...\n")
+	message("Top ranked samples ...\n",appendLF = FALSE)
 	print(head(out))
-	cat("Low ranked samples ...\n")
+	message("Low ranked samples ...\n",appendLF = FALSE)
 	print(tail(out))
 	
 	# Output
@@ -377,17 +378,17 @@ ARTI_find = function(vcs,strand,nSEG,qscore_thres,ad_thres,rd_thres,
 	smart_header(OBJ = vcs,req_COLS = req_COLS)
 	
 	if( ARTI == "OXOG" ){
-		cat(sprintf("%s: Finding oxoG artifacts ...\n",date()))
+		message(sprintf("%s: Finding oxoG artifacts ...\n",date()),appendLF = FALSE)
 	} else if( ARTI == "FFPE" ){
-		cat(sprintf("%s: Finding FFPE artifacts ...\n",date()))
+		message(sprintf("%s: Finding FFPE artifacts ...\n",date()),appendLF = FALSE)
 	} else if( ARTI == "ARTI" ){
-		cat(sprintf("%s: Finding ARTI artifacts ...\n",date()))
+		message(sprintf("%s: Finding ARTI artifacts ...\n",date()),appendLF = FALSE)
 	}
 	vcs = vcs[,names(vcs) != ARTI]
 	vcs$INFER = NA
 	
 	# Append strand bias column
-	cat(sprintf("%s: Merge strand info ...\n",date()))
+	message(sprintf("%s: Merge strand info ...\n",date()),appendLF = FALSE)
 	vcs = smart_rmcols(vcs,"Strand_bias_P")
 	vcs = smart_merge(vcs,strand[,c("mutID","Chr",
 		"Position","Ref","Alt","Strand_bias_P")],all.x=TRUE)
@@ -425,8 +426,8 @@ ARTI_find = function(vcs,strand,nSEG,qscore_thres,ad_thres,rd_thres,
 	cnt = 1
 	for(id in IDs){
 		# id = IDs[1]
-		cat(paste0(id," "))
-		if( cnt %% 3 == 0 ) cat("\n")
+		message(paste0(id," "),appendLF = FALSE)
+		if( cnt %% 3 == 0 ) message("\n",appendLF = FALSE)
 		sn_filter = vcs[[ID]] == id
 		idx = which(sn_filter & glob_filter)
 		length(idx)
@@ -514,7 +515,7 @@ ARTI_find = function(vcs,strand,nSEG,qscore_thres,ad_thres,rd_thres,
 		
 		cnt = cnt + 1
 	}
-	cat("\n")
+	message("\n",appendLF = FALSE)
 	names(vcs)[names(vcs) == "INFER"] = ARTI
 	vcs = vcs[,names(vcs) != "Strand_bias_P"]
 	
@@ -533,12 +534,12 @@ FFPE_find = function(vcs,strand,ad_thres,rd_thres,binom = TRUE,
 		"mutID","Chr","Position","ThsdG_AF","EXAC_AF")
 	smart_header(OBJ = vcs,req_COLS = req_COLS)
 	
-	cat(sprintf("%s: Finding FFPE artifacts ...\n",date()))
+	message(sprintf("%s: Finding FFPE artifacts ...\n",date()),appendLF = FALSE)
 	vcs = vcs[,names(vcs) != "FFPE"]
 	vcs$INFER = NA
 	
 	# Append strand bias column
-	cat(sprintf("%s: Merge strand info ...\n",date()))
+	message(sprintf("%s: Merge strand info ...\n",date()),appendLF = FALSE)
 	vcs = vcs[,names(vcs) != "Strand_bias_P"]
 	vcs = smart_merge(vcs,strand[,c("mutID","Chr",
 		"Position","Ref","Alt","Strand_bias_P")],all.x=TRUE)
@@ -556,8 +557,8 @@ FFPE_find = function(vcs,strand,ad_thres,rd_thres,binom = TRUE,
 	cnt = 1
 	for(id in IDs){
 		# id = IDs[1]
-		cat(paste0(id," "))
-		if(cnt %% 5 == 0) cat("\n")
+		message(paste0(id," "),appendLF = FALSE)
+		if(cnt %% 5 == 0) message("\n",appendLF = FALSE)
 		sn_filter = vcs[[ID]] == id
 		tmp_index = which(sn_filter
 			& ad_filter & dp_filter
@@ -602,7 +603,7 @@ FFPE_find = function(vcs,strand,ad_thres,rd_thres,binom = TRUE,
 		
 		cnt = cnt + 1
 	}
-	cat("\n")
+	message("\n",appendLF = FALSE)
 	names(vcs)[names(vcs) == "INFER"] = "FFPE"
 	vcs = vcs[,names(vcs) != "Strand_bias_P"]
 	
@@ -916,22 +917,22 @@ create_target = function(target_bed,input_df,pad,verbose=TRUE){
 	}
 	
 	# Newer Code
-	if(verbose) cat("Getting target info = ")
+	if(verbose) message("Getting target info = ",appendLF = FALSE)
 	input_df$TARGET = NA
 	for(one_contig in sort(unique(input_df$Chr))){
 		# one_contig = unique(input_df$Chr)[1]
-		if(verbose) cat(paste0(gsub("chr","",one_contig)," "))
+		if(verbose) message(paste0(gsub("chr","",one_contig)," "),appendLF = FALSE)
 		sub_target_bed = target_bed[which(target_bed$chrom == one_contig),]
 		one_index = which(input_df$Chr == one_contig)
 		input_df$TARGET[one_index] = Rcpp_get_target(intervals = as.matrix(sub_target_bed[,c("start","end")]),
 			positions = input_df$Position[one_index],pad = pad)
 	}
-	if(verbose) cat("\n")
+	if(verbose) message("\n",appendLF = FALSE)
 	
 	input_df
 }
 import_bed = function(bed_fn){
-	cat(sprintf("Import bed file: %s\n",bed_fn))
+	message(sprintf("Import bed file: %s\n",bed_fn),appendLF = FALSE)
 	bed_df = fread(file = bed_fn,
 		sep = '\t',header = TRUE,
 		data.table = FALSE,
@@ -983,7 +984,7 @@ new_STRAND = function(BAM_fn,vcs,minBQ = 13,minMQ = 40,NT = 1){
 	}
 	
 	vcs = unique(vcs[,c("mutID","Chr","Position","Ref","Alt")])
-	cat(sprintf("%s: Total number of loci for strand = %s\n",date(),nrow(vcs)))
+	message(sprintf("%s: Total number of loci for strand = %s\n",date(),nrow(vcs)),appendLF = FALSE)
 	bf = BamFile(BAM_fn)
 	p_param = PileupParam(max_depth = 1e4,
 		min_base_quality = minBQ,min_mapq = minMQ,
@@ -1209,14 +1210,14 @@ anno_SEG = function(VC,nSEG,tSEG,eps_thres = 0.5,psi_thres = 0.01){
 	clust_names = c("eps","prob_half","mBAF","prop_mBAF","PSI","ms")
 	
 	# Append nSEG results
-	cat("nANNO ...\n")
+	message("nANNO ...\n",appendLF = FALSE)
 	VC$n_seg = NA
 	nSEG$n_seg = NA
 	num_nSEG = nrow(nSEG)
 	for(ii in seq(num_nSEG)){
 		# ii = 1
-		if( ii %% 2 == 0 ) cat(".")
-		if( ii %% 5e1 == 0 || ii == num_nSEG ) cat(sprintf("%s out of %s\n",ii,num_nSEG))
+		if( ii %% 2 == 0 ) message(".",appendLF = FALSE)
+		if( ii %% 5e1 == 0 || ii == num_nSEG ) message(sprintf("%s out of %s\n",ii,num_nSEG),appendLF = FALSE)
 		
 		nSEG$n_seg[ii] = ii
 		chr = nSEG$Chr[ii]; chr
@@ -1266,21 +1267,21 @@ anno_SEG = function(VC,nSEG,tSEG,eps_thres = 0.5,psi_thres = 0.01){
 	VC = smart_merge(VC,nSEG_2,all.x = TRUE)
 	VC = smart_rmcols(VC,"n_seg")
 	rm(nSEG_2)
-	cat("\n")
+	message("\n",appendLF = FALSE)
 	
 	# Infer H2M
-	cat("Infer H2M status ...\n")
+	message("Infer H2M status ...\n",appendLF = FALSE)
 	VC$nANNO = ifelse(VC$N_eps >= eps_thres | VC$N_PSI >= psi_thres,"H2M","mappable")
 
 	# Append tSEG results
-	cat("tANNO ...\n")
+	message("tANNO ...\n",appendLF = FALSE)
 	VC$t_seg = NA
 	tSEG$t_seg = NA
 	num_tSEG = nrow(tSEG)
 	for(ii in seq(num_tSEG)){
 		# ii = 1
-		if( ii %% 2 == 0 ) cat(".")
-		if( ii %% 5e1 == 0 || ii == num_tSEG ) cat(sprintf("%s out of %s\n",ii,num_tSEG))
+		if( ii %% 2 == 0 ) message(".",appendLF = FALSE)
+		if( ii %% 5e1 == 0 || ii == num_tSEG ) message(sprintf("%s out of %s\n",ii,num_tSEG),appendLF = FALSE)
 		
 		tSEG$t_seg[ii] = ii
 		chr = tSEG$Chr[ii]; chr
@@ -1330,10 +1331,10 @@ anno_SEG = function(VC,nSEG,tSEG,eps_thres = 0.5,psi_thres = 0.01){
 	VC = smart_merge(VC,tSEG_2,all.x = TRUE)
 	VC = smart_rmcols(VC,"t_seg")
 	rm(tSEG_2)
-	cat("\n")
+	message("\n",appendLF = FALSE)
 	
 	# Infer BAF status and Posterior probability of BAF
-	cat("Infer ALLELE_STAT and tANNO ...\n")
+	message("Infer ALLELE_STAT and tANNO ...\n",appendLF = FALSE)
 	VC$ALLELE_STAT = apply(VC[,paste0("T_",clust_names)],1,
 		function(x) get_ALLELE_STAT(x))
 	VC$tANNO = apply(VC[,c("tAD","tRD",paste0("T_",clust_names))],1,
@@ -1343,7 +1344,7 @@ anno_SEG = function(VC,nSEG,tSEG,eps_thres = 0.5,psi_thres = 0.01){
 			function(x) get_INFER(vec_RD = x[1:2],params = x[3:8]))
 		
 	}
-	cat("\n")
+	message("\n",appendLF = FALSE)
 	
 	# Output
 	return(VC)
@@ -1558,6 +1559,7 @@ plot_TO = function(outdir,tumorID,all_vcs,fNPN,genome,hg,all_tVAF_segs){
 #'	\code{headers = NULL}, in which all available header definitions 
 #'	are printed. If a subset of headers are specified, only the subset 
 #'	of header definitions are printed.
+#' @return Null value, prints definitions to console.
 #' @export
 UNMASC_definitions = function(headers = NULL){
 	readme_VC = c()
@@ -1706,6 +1708,7 @@ make_uniq_vc_anno = function(all_vcs,strand,all_nVAF_segs,all_tVAF_segs){
 #'	is flagged and UNMASC exits.
 #' @param ncores A positive integer for the number of threads to 
 #'	use for calculating strand-specific read counts.
+#' @return Null from function. Outputs UNMASC results to files.
 #' @export
 run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_chrom_fn,
 	qscore_thres = 30,exac_thres = 5e-3,ad_thres = 5,rd_thres = 10,cut_BAF = 5e-2,
@@ -1725,9 +1728,9 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 		
 	}
 	
-	cat("% ------------------------------- %\n")
-	cat("% Welcome to the UNMASC workflow! %\n")
-	cat("% ------------------------------- %\n")
+	message("% ------------------------------- %\n",appendLF = FALSE)
+	message("% Welcome to the UNMASC workflow! %\n",appendLF = FALSE)
+	message("% ------------------------------- %\n",appendLF = FALSE)
 	Sys.sleep(1)
 	smart_mkdir(outdir)
 	
@@ -1746,14 +1749,14 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 		}
 		
 		# Filter based on depth and contig, create mutID
-		cat(sprintf("%s: Calculate mutID and light filtering ...\n",date()))
+		message(sprintf("%s: Calculate mutID and light filtering ...\n",date()),appendLF = FALSE)
 		vcf$nDP = rowSums(vcf[,c("nAD","nRD")])
 		vcf$tDP = rowSums(vcf[,c("tAD","tRD")])
 		vcf = vcf[which(vcf$tDP >= 5 & vcf$nDP >= 5 & vcf$Qscore >= 5),] # lowest tolerated thresholds
 		
 		# Flagging low QC samples: Method 1
 		if( nrow(vcf) < 1e3 ){
-			cat(sprintf("%s: LowQCSample b/c low variant count after base filtering ...\n",date()))
+			message(sprintf("%s: LowQCSample b/c low variant count after base filtering ...\n",date()),appendLF = FALSE)
 			return(NULL)
 		}
 		
@@ -1767,7 +1770,7 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 		rm(uvcf)
 		
 		# Calculate VAFs
-		cat(sprintf("%s: Calculate nVAFs and tVAFs ...\n",date()))
+		message(sprintf("%s: Calculate nVAFs and tVAFs ...\n",date()),appendLF = FALSE)
 		if( !("tVAF" %in% names(vcf)) ){
 			vcf$tVAF = ifelse(vcf$tDP == 0,0,vcf$tAD/vcf$tDP)
 		}
@@ -1776,16 +1779,16 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 		}
 		
 		# Get chromosome lengths and centromere info
-		cat(sprintf("%s: Import genome files ...\n",date()))
+		message(sprintf("%s: Import genome files ...\n",date()),appendLF = FALSE)
 		genome = prep_genome(bed_centromere_fn = bed_centromere_fn,
 			dict_chrom_fn = dict_chrom_fn)
 		
 		# Create xCoor
-		cat(sprintf("%s: Calculate xCoor ...\n",date()))
+		message(sprintf("%s: Calculate xCoor ...\n",date()),appendLF = FALSE)
 		vcf$x_coor = create_xCoor(genome = genome,x = vcf)$x_coor
 		
 		# Cluster normal counts
-		cat(sprintf("%s: Normal read count clustering ...\n",date()))
+		message(sprintf("%s: Normal read count clustering ...\n",date()),appendLF = FALSE)
 		out_nCLUST = run_nCLUST(vcf = vcf,ID = "STUDYNUMBER",
 			rd_thres = rd_thres,ad_thres = ad_thres,qscore_thres = qscore_thres,
 			hg = hg,binom = binom,outdir = outdir,genome = genome,verbose = TRUE)
@@ -1797,14 +1800,14 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 			minBQ = minBQ,minMQ = minMQ,NT = ncores)
 		
 		# Save image
-		cat(sprintf("%s: Save image ...\n",date()))
+		message(sprintf("%s: Save image ...\n",date()),appendLF = FALSE)
 		saveRDS(list(vcf = vcf,strand = strand,
 			genome = genome,SE = SE,qscore_thres = qscore_thres,
 			exac_thres = exac_thres,ad_thres = ad_thres,
 			rd_thres = rd_thres,gender = gender,hg = hg),image_fn)
 	}
 	
-	cat(sprintf("%s: Import image ...\n",date()))
+	message(sprintf("%s: Import image ...\n",date()),appendLF = FALSE)
 	rds 		= readRDS(image_fn)
 	vcf 		= rds$vcf
 	strand 	= rds$strand
@@ -1816,16 +1819,14 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 	tab_normal = table(CONTROL = vcf$STUDYNUMBER,Normal_Depth = vcf$nDP)
 	if( ncol(tab_tumor) <= 50 ){
 		print(tab_tumor)
-		cat(sprintf("%s: LowQCSample b/c low variability in tumor depth\n",date()))
+		message(sprintf("%s: LowQCSample b/c low variability in tumor depth\n",date()),appendLF = FALSE)
 		return(NULL)
 	}
 	
 	# Flagging low QC samples: Method 3
 	num_uniq_IDs = length(unique(vcf$mutID[vcf$tDP >= flag_samp_depth_thres[2]]))
 	if( num_uniq_IDs < flag_samp_depth_thres[1] ){
-		cat(sprintf("%s: LowQCSample b/c %s unique tumor loci, which is less than %s,
-			\tachieve total read depth >= %s\n",date(),
-			num_uniq_IDs,flag_samp_depth_thres[1],flag_samp_depth_thres[2]))
+		message(sprintf("%s: LowQCSample b/c %s unique tumor loci, which is less than %s, achieve total read depth >= %s\n",date(),num_uniq_IDs,flag_samp_depth_thres[1],flag_samp_depth_thres[2]),appendLF = FALSE)
 		return(NULL)
 	}
 	
@@ -1879,7 +1880,7 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 	# Add segmentation annotations
 	vcf_TE = vcf[which(vcf$TARGET == "YES" & vcf$EXONIC == "YES"),]
 	uniq_vcs = smart_uniq_df(input_df = vcf_TE,vars = "mutID")
-	cat(paste0("nrow of uniq_vcs = ",nrow(uniq_vcs),"\n"))
+	message(paste0("nrow of uniq_vcs = ",nrow(uniq_vcs),"\n"),appendLF = FALSE)
 	uniq_vcs2 = anno_SEG(VC = uniq_vcs,nSEG = nSEG,tSEG = tSEG,
 		eps_thres = eps_thres,psi_thres = psi_thres)
 	clust_names = c("eps","prob_half","mBAF","prop_mBAF","PSI","ms")

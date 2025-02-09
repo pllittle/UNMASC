@@ -1,7 +1,7 @@
 # Simulate functions
 gen_genome = function(outdir){
 
-	cat("Create hg19 chromosome lengths and centromere positions.\n")
+	message("Create hg19 chromosome lengths and centromere positions.\n",appendLF = FALSE)
 	genome = smart_df(Chr = paste0("chr",c(1:22,"X","Y")))
 	genome$nChr = seq(24)
 	genome$length = as.integer(c(249250621,243199373,198022430,
@@ -47,7 +47,7 @@ gen_genome = function(outdir){
 	genome
 }
 gen_tumor_state = function(genome,cn_state,purity,max_PSI){
-	cat("Generate underlying tumor copy number.\n")
+	message("Generate underlying tumor copy number.\n",appendLF = FALSE)
 	tumor_segs = c()
 	half_bounds = 0.95
 	noise_bound = 0.1
@@ -86,7 +86,7 @@ gen_tumor_state = function(genome,cn_state,purity,max_PSI){
 	tumor_segs
 }
 gen_normal_state = function(genome,max_PSI){
-	cat("Generate underlying normal genome H2M regions.\n")
+	message("Generate underlying normal genome H2M regions.\n",appendLF = FALSE)
 	normal_segs = c(); h2m_prob = 0.1; max_h2m_interval = 40e6
 	for(chr in paste0("chr",c(1:22,"X"))){
 		# chr = "chr1"
@@ -120,7 +120,7 @@ gen_normal_state = function(genome,max_PSI){
 	normal_segs
 }
 gen_umn_counts = function(num_normals,uniq_vc,normal_segs,mean_DP,AA_vaf){
-	cat("Generate UMN read counts: ")
+	message("Generate UMN read counts: ",appendLF = FALSE)
 	nVAF = list()
 	probs = c(8,8,2,1,1); probs = probs / sum(probs)
 	
@@ -133,7 +133,7 @@ gen_umn_counts = function(num_normals,uniq_vc,normal_segs,mean_DP,AA_vaf){
 	}
 	
 	for(nn in seq(num_normals)){
-		cat(".")
+		message(".",appendLF = FALSE)
 		tmp_df = smart_df(uniq_vc[,c("mutID","Chr","Position")],
 			STUDYNUMBER = paste0("N_",nn),nAD = NA,nDP = NA)
 		for(ii in seq(nrow(normal_segs))){
@@ -164,14 +164,14 @@ gen_umn_counts = function(num_normals,uniq_vc,normal_segs,mean_DP,AA_vaf){
 		tmp_df$nVAF = round(tmp_df$nAD / tmp_df$nDP,5)
 		nVAF[[nn]] = tmp_df; rm(tmp_df)
 	}
-	cat("\n")
+	message("\n",appendLF = FALSE)
 	
 	nVAF
 }
 gen_vc_status = function(uniq_vc,tumor_segs,mean_DP,purity,ffpe_vaf,oxog_vaf){
 	
 	# Somatic status, artifact status
-	cat("Generate variant call statuses\n")
+	message("Generate variant call statuses\n",appendLF = FALSE)
 	num_loci = nrow(uniq_vc)
 	uniq_vc$EXAC_AF = 0; uniq_vc$ThsdG_AF = 0; uniq_vc$CosmicOverlaps = 0
 	uniq_vc$tAD = NA; uniq_vc$status = NA; uniq_vc$Qscore = 50
@@ -254,7 +254,7 @@ gen_vc_status = function(uniq_vc,tumor_segs,mean_DP,purity,ffpe_vaf,oxog_vaf){
 }
 gen_tumor_counts = function(tumor_segs,uniq_vc){
 	# Tumor germline read counts
-	cat("Generate tumor germline read counts\n")
+	message("Generate tumor germline read counts\n",appendLF = FALSE)
 	prop_ingerm = 0.8
 	
 	gen_AD = function(dp,maf,psi){
@@ -314,12 +314,12 @@ gen_tumor_counts = function(tumor_segs,uniq_vc){
 }
 gen_make_vcfs = function(outdir,num_normals,uniq_vc,nVAF){
 	# Make VCFs
-	cat("Making VCFs: ")
+	message("Making VCFs: ",appendLF = FALSE)
 	uniq_vc$EXAC_AF = round(uniq_vc$EXAC_AF,4)
 	for(nn in seq(num_normals)){
 		# nn = 1
 		# dim(uniq_vc); dim(nVAF[[nn]])
-		cat(".")
+		message(".",appendLF = FALSE)
 		tmp_vcf = cbind(uniq_vc,nVAF[[nn]][,c("nAD","nRD","nDP","STUDYNUMBER")])
 		tmp_vcf$ID = "."; tmp_vcf$FILTER = "PASS"; tmp_vcf$FORMAT = "GT:AD:DP"
 		tmp_vcf$CHROM = gsub("chr","",tmp_vcf$Chr)
@@ -350,7 +350,7 @@ gen_make_vcfs = function(outdir,num_normals,uniq_vc,nVAF){
 		smart_WT(tmp_vcf,file.path(outdir,sprintf("UMN_%s.vcf",nn)),sep="\t")
 		rm(tmp_vcf)
 	}
-	cat("\n")
+	message("\n",appendLF = FALSE)
 }
 
 #' @title gen_simulated_data
@@ -387,6 +387,9 @@ gen_make_vcfs = function(outdir,num_normals,uniq_vc,nVAF){
 #'	the variant calls are plotted. This will include germline, artifact, 
 #'	and somatic variants.
 #' @param seed A numeric seed value. If \code{NULL}, a default seed is set.
+#' @return A list of simulated data including vcfs, filepaths,
+#'	target BED file, dictionary chrom BED file, gender indicator
+#'	to reflect the data type and format UNMASC is expecting.
 #' @export
 gen_simulated_data = function(outdir,purity = NULL,cn_state = NULL,
 	num_loci = 1e4,num_normals = 20,AA_vaf = 0.002,mean_DP = 500,
@@ -441,7 +444,7 @@ gen_simulated_data = function(outdir,purity = NULL,cn_state = NULL,
 	# Simulate H2M regions
 	normal_segs = gen_normal_state(genome = genome,max_PSI = max_PSI)
 
-	cat("Allelic copy number states to sample from ...\n")
+	message("Allelic copy number states to sample from ...\n",appendLF = FALSE)
 	print(cn_state,right=FALSE)
 	Sys.sleep(2)
 	tumor_segs = gen_tumor_state(genome = genome,
@@ -500,7 +503,7 @@ gen_simulated_data = function(outdir,purity = NULL,cn_state = NULL,
 
 	# Plot
 	if( show_plot ){
-		cat("Plotting ...\n")
+		message("Plotting ...\n",appendLF = FALSE)
 		def_par = par()
 		par(mfrow=c(2,2),mar=c(4,4,0.2,0.2),bty="n")
 		plot(nVAF[[1]]$nVAF,cex=uniq_vc$pt_cex,
@@ -549,6 +552,7 @@ gen_simulated_data = function(outdir,purity = NULL,cn_state = NULL,
 #' @param tumor To generate tumor read counts, set to \code{TRUE}, 
 #'	otherwise set to \code{FALSE}.
 #' @param show_plots Set to \code{TRUE} to plot the simulated output.
+#' @return A list containing simulated true segmentation and observed data.
 #' @export
 simulate_BAF = function(num_segs = 2,mean_depth = 300,max_PSI = 0,
 	tumor = TRUE,show_plots = TRUE){

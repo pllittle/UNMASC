@@ -18,14 +18,9 @@
 #' @importFrom Rsamtools BamFile PileupParam ScanBamParam pileup
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges
+#' @importFrom methods is
 #' @import foreach
 #' @useDynLib UNMASC
 NULL
-
-# Create package
-# rm(list=ls()); library(smarter)
-# smart_prepPack(pack_dir = "C:/Users/Admin/Desktop/github/UNMASC",
-#		pandoc = "C:/Program Files/RStudio/bin/pandoc",
-#		make_vign = !TRUE,cran = TRUE,build_dir = NULL)
 
 ###

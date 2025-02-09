@@ -1,6 +1,6 @@
 # Genome functions
 prep_genome = function(bed_centromere_fn,dict_chrom_fn){
-	cat("Import/Prep genome files, used for plotting genome position on x-axis.\n")
+	message("Import/Prep genome files, used for plotting genome position on x-axis.\n",appendLF = FALSE)
 	
 	# Prep centro
 	centro = fread(bed_centromere_fn,sep = '\t',

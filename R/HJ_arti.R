@@ -177,7 +177,7 @@ test_parallel_MQ = function(vcs,BAM_fn,FASTA_fn,minBQ=0,PERMS=1e3,NT = 1){
 		stop(sprintf("%s file does not exist!",BAM_fn))
 	}
 	
-	cat(sprintf("Run MQ feature: Sample has %s variants ...\n",nrow(vcs)))
+	message(sprintf("Run MQ feature: Sample has %s variants ...\n",nrow(vcs)),appendLF = FALSE)
 	cl = makeCluster(NT) # NT = num threads
 	registerDoParallel(cl)
 	ii = NULL

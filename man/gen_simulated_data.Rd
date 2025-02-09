@@ -60,6 +60,11 @@ and somatic variants.}
 
 \item{seed}{A numeric seed value. If \code{NULL}, a default seed is set.}
 }
+\value{
+A list of simulated data including vcfs, filepaths,
+target BED file, dictionary chrom BED file, gender indicator
+to reflect the data type and format UNMASC is expecting.
+}
 \description{
 The function simulates one sample's underlying 
 somatic point mutations and copy number aberrations and creates 

@@ -20,6 +20,9 @@ more trials help to avoid using a sub-optimal solution.}
 
 \item{note}{A character string to label the plot title}
 }
+\value{
+R data.frame of cluster results and sample labeling.
+}
 \description{
 Clusters sample metrics to identify outlier and 
 reliable samples to establish a normal control cohort

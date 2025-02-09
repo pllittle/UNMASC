@@ -2,16 +2,16 @@ Package: UNMASC
 Type: Package
 Title: Tumor-Only Variant Calling with Unmatched Normal Control Samples
 Version: 1.0.0
-Date: 2022-02-15
-Author: Paul Little
-Maintainer: Paul Little <plittle@fredhutch.org>
-Description: Tumor-only variant calling is conducted through tumor and
-	unmatched normal annotation, filtering, clustering, and
-	segmentation (Little et al. (2021) <doi:10.1093/narcan/zcab040>).
+Date: 2025-02-08
+Authors@R: 
+	person("Paul","Little",
+		email = "pllittle321@gmail.com",
+		role = c("aut","cre"))
+Description: Tumor-only variant calling is conducted through tumor and unmatched normal annotation, filtering, clustering, and segmentation (Little et al. (2021) <doi:10.1093/narcan/zcab040>).
 Encoding: UTF-8
 Imports: smarter, data.table, doParallel, foreach, parallel,
 	GenomicRanges, IRanges, Rsamtools, emdbook, scales, seqTools,
-	Rcpp
+	methods, Rcpp
 LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 3)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
