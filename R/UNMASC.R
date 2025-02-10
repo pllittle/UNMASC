@@ -1667,7 +1667,7 @@ make_uniq_vc_anno = function(all_vcs,strand,all_nVAF_segs,all_tVAF_segs){
 #'	control alternate depth, control reference depth, tumor alternate depth,
 #'	tumor reference depth, respectively.
 #' @param tBAM_fn A character string specifying the full path 
-#'	to the tumor's BAM file.
+#'	to the tumor's BAM file. Can be set to \code{NULL} if strand.rds already exists.
 #' @param bed_centromere_fn Centromere regions filename. This should
 #'	be tab delimited without headers containing columns contig (e.g. 'chr1'),
 #'	start position (e.g. 100), and end position (e.g. 100000).
@@ -1710,9 +1710,10 @@ make_uniq_vc_anno = function(all_vcs,strand,all_nVAF_segs,all_tVAF_segs){
 #'	use for calculating strand-specific read counts.
 #' @return Null from function. Outputs UNMASC results to files.
 #' @export
-run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_chrom_fn,
-	qscore_thres = 30,exac_thres = 5e-3,ad_thres = 5,rd_thres = 10,cut_BAF = 5e-2,
-	minBQ = 13,minMQ = 40,eps_thres = 0.5,psi_thres = 0.02,hg = "19",binom = TRUE,
+run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn = NULL,
+	bed_centromere_fn,dict_chrom_fn,qscore_thres = 30,exac_thres = 5e-3,
+	ad_thres = 5,rd_thres = 10,cut_BAF = 5e-2,minBQ = 13,minMQ = 40,
+	eps_thres = 0.5,psi_thres = 0.02,hg = "19",binom = TRUE,
 	gender = NA,flag_samp_depth_thres = c(1e3,50),ncores = 1){
 	
 	if(FALSE){
@@ -1731,10 +1732,11 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 	message("% ------------------------------- %\n",appendLF = FALSE)
 	message("% Welcome to the UNMASC workflow! %\n",appendLF = FALSE)
 	message("% ------------------------------- %\n",appendLF = FALSE)
-	Sys.sleep(1)
 	smart_mkdir(outdir)
 	
 	image_fn = file.path(outdir,"image.rds")
+	strand_fn = file.path(outdir,"strand.rds")
+	
 	if( !file.exists(image_fn) ){
 		# Checking required inputs
 		req_COLS = c("Chr","Position","Ref","Alt","Qscore",
@@ -1796,8 +1798,14 @@ run_UNMASC = function(tumorID,outdir,vcf = NULL,tBAM_fn,bed_centromere_fn,dict_c
 		SE = out_nCLUST$SE
 		
 		# Strand
-		strand = new_STRAND(BAM_fn = tBAM_fn,vcs = vcf,
-			minBQ = minBQ,minMQ = minMQ,NT = ncores)
+		if( !file.exists(strand_fn) ){
+			if( is.null(tBAM_fn) ) stop("Specify tBAM_fn!")
+			strand = new_STRAND(BAM_fn = tBAM_fn,vcs = vcf,
+				minBQ = minBQ,minMQ = minMQ,NT = ncores)
+			saveRDS(strand,strand_fn)
+		} else {
+			strand = readRDS(strand_fn)
+		}
 		
 		# Save image
 		message(sprintf("%s: Save image ...\n",date()),appendLF = FALSE)

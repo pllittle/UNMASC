@@ -1,0 +1,269 @@
+---
+title: "Introduction"
+author: "Paul Little"
+date: "`r sprintf('Last Updated: %s',format(Sys.Date(),'%B %d, %Y'))`"
+bibliography: references.bib
+csl: apa.csl
+output: 
+  html_document:
+    number_sections: false
+    theme: journal
+    highlight: tango
+    toc: true
+    toc_depth: 3
+    toc_float: 
+      collapsed: true
+      smooth_scoll: true
+vignette: >
+  %\VignetteIndexEntry{test}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,cache = TRUE,out.width = "100%")
+purity = 0.8
+```
+
+# Welcome
+
+The sample code in this vignette is designed to show R users how to navigate UNMASC [@little2021unmasc] and its expected file types.
+
+# Libraries
+
+```{r load,message = FALSE}
+library(smarter)
+library(UNMASC)
+library(data.table)
+library(sqldf)
+```
+
+# Terminology
+
+* MN = matched normal
+* UMN = unmatched normal
+
+# Simulate
+
+The code below will generate
+
+* 20 annotated VCFs, by default, representing 20 UMNs treated as MNs against a single tumor-only sample
+* a target bed file
+* centromere bed file
+* chromosome sizes dictionary file
+
+assuming that the tumor's purity is `r purity` with a fixed seed.
+
+```{r init_sim,message = FALSE}
+outdir = sprintf("%s/sim",getwd())
+
+sim = UNMASC::gen_simulated_data(
+  outdir = outdir,
+  purity = purity,
+  seed = 123)
+
+print(sim)
+```
+
+## Single VCF
+
+### Import
+
+Code below imports a single vcf.
+
+```{r parse}
+vcf_fn = file.path(outdir,"UMN_1.vcf")
+vcf = data.table::fread(vcf_fn,sep = "\t",data.table = FALSE)
+
+dim(vcf)
+head(vcf,n = 3)
+```
+
+### Wrangle
+
+Remove some initial fields, order contigs with `ChrNum` derived field.
+
+```{r parse2}
+# Ignore annotation
+vcf = smarter::smart_rmcols(vcf,"INFO")
+
+smart_table(vcf[["#CHROM"]])
+
+# For ordering contigs
+vcf$ChrNum = ifelse(
+  vcf[["#CHROM"]] == "X",23,
+  ifelse(vcf[["#CHROM"]] == "Y",24,
+    vcf[["#CHROM"]]))
+vcf$ChrNum = as.integer(vcf$ChrNum)
+```
+
+### Read counts and VAF
+
+Extracts tumor and normal read counts.
+
+```{r parse3}
+vcf$nAD = NA
+vcf$nRD = NA
+vcf$tAD = NA
+vcf$tRD = NA
+
+vcf[,c("nAD","nRD")] = t(sapply(vcf$NORMAL,function(xx){
+  xx = strsplit(xx,":")[[1]][2]
+  xx = strsplit(xx,"[|]")[[1]]
+  xx
+},USE.NAMES = FALSE))
+
+vcf[,c("tAD","tRD")] = t(sapply(vcf$TUMOR,function(xx){
+  xx = strsplit(xx,":")[[1]][2]
+  xx = strsplit(xx,"[|]")[[1]]
+  xx
+},USE.NAMES = FALSE))
+
+# Rm NORMAL/TUMOR fields
+vcf = smarter::smart_rmcols(vcf,c("TUMOR","NORMAL"))
+
+# Set field types
+for(nm in c("nAD","nRD","tAD","tRD")){
+  vcf[,nm] = as.integer(vcf[,nm])
+}
+
+# Derive VAF and depth
+vcf = smarter::smart_rmcols(vcf,
+  c("nDP","tDP","nVAF","tVAF","ncex","tcex"))
+
+vcf = sqldf("
+  select
+    vcf.*,
+    nAD + nRD as nDP,
+    tAD + tRD as tDP,
+    1.0 * nAD / (nAD + nRD) as nVAF,
+    1.0 * tAD / (tAD + tRD) as tVAF,
+    0.5 * log10(nAD + nRD) as ncex,
+    0.5 * log10(tAD + tRD) as tcex
+  from
+    vcf
+  order by
+    ChrNum,
+    POS
+")
+head(vcf,n = 3)
+
+# Contigs, Positions
+sqldf("
+  select
+    [#CHROM],
+    count([#CHROM]) as num_loci,
+    min(POS) as Min_Pos,
+    max(POS) as Max_Pos
+  from
+    vcf
+  group by
+    ChrNum
+")
+
+```
+
+### Visualize
+
+```{r visual}
+par(mfrow = c(1,2))
+smart_hist(vcf$nDP,breaks = 40,xlab = "Total Depth",main = "Normal")
+smart_hist(vcf$tDP,breaks = 40,xlab = "Total Depth",main = "Tumor")
+```
+
+```{r visual2}
+plot(vcf$nVAF,
+  main = "Normal",
+  xlab = "Genomic Index",
+  ylab = "Variant Allele Frequency",
+  cex = vcf$ncex)
+abline(h = c(0,0.5,1),lty = 2,lwd = 2,col = "blue")
+```
+
+```{r visual3}
+plot(vcf$tVAF,
+  main = "Tumor",
+  xlab = "Genomic Index",
+  ylab = "Variant Allele Frequency",
+  cex = vcf$tcex)
+abline(h = c(0,0.5,1),lty = 2,lwd = 2,col = "red")
+```
+
+## Tumor-only Annotation Workflow
+
+The function `UNMASC::run_UNMASC()` requires a R data.frame with pre-set field names and data types, multiple file paths, and a few hyper parameters. With our simulated data set, we'll import everything, extract necessary fields and run the full workflow.
+
+### Import 
+
+```{r full_import}
+fvcf = c()
+all_fns = list.files(outdir,pattern = "UMN_")
+all_fns = all_fns[grepl(".vcf$",all_fns)]
+for(fn in all_fns){
+  message(".",appendLF = FALSE)
+  vcf_fn = file.path(outdir,fn)
+  nm = gsub(".vcf","",fn)
+  vcf = data.table::fread(vcf_fn,sep = "\t",data.table = FALSE)
+  
+  # ID per UMN
+  vcf$STUDYNUMBER = nm
+  
+  fvcf = rbind(fvcf,vcf)
+}
+
+dim(fvcf)
+smart_table(fvcf$STUDYNUMBER)
+```
+
+In a real data analysis, one might have multiple raw VCF files and a separate annotation file similar to the outputs from `../workflow/tumor_only.sh` through the provided bash function `TO_workflow()`. The user can perform a merge or SQL join between the raw VCF data.frame and annotation data.frame and pass the resulting data.frame into `UNMASC::run_UNMASC()`. Alternatively, the user can use `UNMASC::prep_UNMASC_VCF()` to parse the annotations, read counts and generate the required UNMASC input vcf R data.frame.
+
+### Parse
+
+The code provided here will demonstrate one way to manually parse for all required input fields.
+
+```{r fparse}
+fin_vcf = sqldf("
+  select
+    [#CHROM] as Chr
+  from
+    fvcf
+")
+
+```
+
+Let's isolate unique loci and parse annotations.
+
+```{r uniq_anno,eval = FALSE}
+anno = sqldf("
+  select distinct
+    [#CHROM],
+    POS,
+    REF,
+    ALT,
+    INFO
+  from
+    fvcf
+")
+
+dim(anno)
+```
+
+### Execute
+
+```{r exec,eval = FALSE}
+UNMASC::run_UNMASC(
+  outdir = outdir,
+  vcf = fvcf,
+  tumorID = "sim")
+
+```
+
+### Interpret
+
+# Session Information
+
+```{r}
+sessionInfo()
+```
+
+# References

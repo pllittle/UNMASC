@@ -278,7 +278,7 @@ Rcpp::List Rcpp_BAF_clust(const arma::mat& RD,const arma::vec& DP,
 	const double& eps = 1e-5,const bool& show = true){
 	
 	arma::uword BB = RD.n_rows,iter = 0,cc,ms = 1;
-	double mm = mm0,old_LL,BIC,curr_LL = 0,psi = psi0;
+	double mm = mm0,old_LL = 0.0,BIC,curr_LL = 0,psi = psi0;
 	arma::vec props = props0,PARS = arma::zeros<arma::vec>(2),
 		curr_PARS = PARS,curr_props = props;
 	arma::mat Z = arma::zeros<arma::mat>(BB,4),

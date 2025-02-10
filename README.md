@@ -105,10 +105,10 @@ build_vign = !is.null(pandoc) && file.exists(pandoc)
 
 cran_packs = c("devtools","Rcpp","RcppArmadillo","emdbook",
 	"scales","BiocManager","parallel","doParallel",
-	"data.table","grDevices","foreach")
+	"data.table","grDevices","foreach","smarter")
 bioc_packs = c("seqTools","Rsamtools","GenomicRanges",
 	"IRanges")
-github_packs = c("smarter","UNMASC")
+github_packs = c("UNMASC")
 req_packs = c(cran_packs,bioc_packs,github_packs)
 
 for(pack in req_packs){

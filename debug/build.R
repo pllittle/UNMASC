@@ -51,7 +51,7 @@ use_gpl3_license()
 check_pandoc = pandoc_available(); check_pandoc
 vign_dir = file.path(pack_dir,"vignettes")
 chk_vign = length(list.files(vign_dir,pattern = "Rmd")) > 0
-override_vign = !FALSE
+override_vign = FALSE
 make_vign = check_pandoc && chk_vign && override_vign; make_vign
 
 # Check: takes some time

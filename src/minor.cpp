@@ -239,7 +239,7 @@ Rcpp::List ZOISB_EM(const arma::mat& RD,
 		Rcpp::stop("min(DP) = 0");
 	}
 	
-	arma::uword B = DP.n_elem, cc, ms,
+	arma::uword B = DP.n_elem, cc, ms = 0,
 		iter = 0;
 	arma::mat Z = arma::zeros<arma::mat>(B,6);
 	arma::vec params = params0;

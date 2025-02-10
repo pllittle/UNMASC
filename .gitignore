@@ -2,3 +2,7 @@
 *.o
 *.dll
 *.gz
+vignettes/sim
+vignettes/*_cache
+vignettes/*_files
+

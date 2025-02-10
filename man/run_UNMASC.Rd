@@ -8,7 +8,7 @@ run_UNMASC(
   tumorID,
   outdir,
   vcf = NULL,
-  tBAM_fn,
+  tBAM_fn = NULL,
   bed_centromere_fn,
   dict_chrom_fn,
   qscore_thres = 30,
@@ -51,7 +51,7 @@ control alternate depth, control reference depth, tumor alternate depth,
 tumor reference depth, respectively.}
 
 \item{tBAM_fn}{A character string specifying the full path 
-to the tumor's BAM file.}
+to the tumor's BAM file. Can be set to \code{NULL} if strand.rds already exists.}
 
 \item{bed_centromere_fn}{Centromere regions filename. This should
 be tab delimited without headers containing columns contig (e.g. 'chr1'),

@@ -319,6 +319,11 @@ gen_make_vcfs = function(outdir,num_normals,uniq_vc,nVAF){
 	for(nn in seq(num_normals)){
 		# nn = 1
 		# dim(uniq_vc); dim(nVAF[[nn]])
+		
+		vcf_fn = file.path(outdir,sprintf("UMN_%s.vcf",nn))
+		
+		if( file.exists(vcf_fn) ) next
+		
 		message(".",appendLF = FALSE)
 		tmp_vcf = cbind(uniq_vc,nVAF[[nn]][,c("nAD","nRD","nDP","STUDYNUMBER")])
 		tmp_vcf$ID = "."; tmp_vcf$FILTER = "PASS"; tmp_vcf$FORMAT = "GT:AD:DP"
@@ -347,7 +352,7 @@ gen_make_vcfs = function(outdir,num_normals,uniq_vc,nVAF){
 		tmp_vcf = tmp_vcf[,c("#CHROM","POS","ID","REF","ALT",
 			"QUAL","FILTER","INFO","FORMAT","NORMAL","TUMOR")]
 		# tmp_vcf[1:5,]
-		smart_WT(tmp_vcf,file.path(outdir,sprintf("UMN_%s.vcf",nn)),sep="\t")
+		smart_WT(tmp_vcf,vcf_fn,sep = "\t")
 		rm(tmp_vcf)
 	}
 	message("\n",appendLF = FALSE)
@@ -400,6 +405,18 @@ gen_simulated_data = function(outdir,purity = NULL,cn_state = NULL,
 		outdir = outdir; purity = 0.8; cn_state = NULL;
 		num_loci = 1e4; num_normals = 20; AA_vaf = 0.002; mean_DP = 500;
 		oxog_vaf = 0.01; ffpe_vaf = 0.1; show_plot = TRUE; seed = 1
+	}
+	
+	# Output arguments for main function
+	out = list(vcf_files = file.path(outdir,paste0("UMN_",seq(num_normals),".vcf")),
+		bed_regions = file.path(outdir,"target.bed"),
+		bed_centromere = file.path(outdir,"hg19_centromeres.bed"),
+		dict_chrom = file.path(outdir,"hg19.dict"),
+		gender = "FEMALE",simulate = TRUE)
+	
+	if( dir.exists(outdir) ){
+		message("Simulated data already exists!\n",appendLF = FALSE)
+		return(out)
 	}
 	
 	smart_mkdir(outdir)
@@ -533,13 +550,8 @@ gen_simulated_data = function(outdir,purity = NULL,cn_state = NULL,
 		uniq_vc = uniq_vc,nVAF = nVAF)
 	
 	# Output arguments for main function
-	out = list(vcf_files = file.path(outdir,paste0("UMN_",seq(num_normals),".vcf")),
-		bed_regions = file.path(outdir,"target.bed"),
-		bed_centromere = file.path(outdir,"hg19_centromeres.bed"),
-		dict_chrom = file.path(outdir,"hg19.dict"),
-		gender = "FEMALE",simulate = TRUE)
 	
-	out
+	return(out)
 }
 
 #' @title simulate_BAF

@@ -13,5 +13,8 @@ Imports: smarter, data.table, doParallel, foreach, parallel,
 	GenomicRanges, IRanges, Rsamtools, emdbook, scales, seqTools,
 	methods, Rcpp
 LinkingTo: Rcpp, RcppArmadillo
+Depends: R (>= 3.5.0)
 License: GPL (>= 3)
 RoxygenNote: 7.2.3
+Suggests: knitr, devtools
+VignetteBuilder: knitr

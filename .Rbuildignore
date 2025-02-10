@@ -5,3 +5,6 @@ beta
 images
 workflow
 ^README\.md$
+vignettes/sim
+vignettes/*_cache
+vignettes/*_files
