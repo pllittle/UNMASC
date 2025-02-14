@@ -2,17 +2,9 @@
 
 [ -z "$git_dir" ] && git_dir=$(cd $(dirname $BASH_SOURCE)/../..; pwd)
 
-for fn in base colors getEnv install linux_latex \
-	linux_python linux_perl; do
-	. "$git_dir/baSHic/scripts/$fn.sh"
-	[ $? -eq 0 ] && continue
-	echo -e "Error src-ing baSHic's $fn.sh" >&2
-	return 1
-done
-
 odir=$(pwd)
 
-for repo in copythatdna somdna UNMASC; do
+for repo in baSHic copythatdna somdna UNMASC; do
 	
 	repo_dir="$git_dir/$repo"
 	tmp_url=https://github.com/pllittle/$repo.git
@@ -33,6 +25,14 @@ for repo in copythatdna somdna UNMASC; do
 done
 
 cd "$odir"
+
+for fn in base colors getEnv install linux_latex \
+	linux_python linux_perl; do
+	. "$git_dir/baSHic/scripts/$fn.sh"
+	[ $? -eq 0 ] && continue
+	echo -e "Error src-ing baSHic's $fn.sh" >&2
+	return 1
+done
 
 for fn in getCounts; do
 	. "$git_dir/copythatdna/scripts/$fn.sh"
