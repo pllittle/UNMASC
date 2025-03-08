@@ -231,7 +231,7 @@ fin_vcf = sqldf("
 
 ```
 
-Let's isolate unique loci and parse annotations.
+Let us isolate unique loci and parse annotations.
 
 ```{r uniq_anno,eval = FALSE}
 anno = sqldf("

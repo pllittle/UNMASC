@@ -85,8 +85,12 @@ cosm_dir=; [ -z "$cosm_dir" ] \
 	&& echo "Set cosm_dir, directory containing COSMIC vcf" >&2 \
 	&& return 1
 
-cosm_ver; [ -z "$cosm_ver" ] \
-	&& echo "Set cosm_ver, COSMIC version number, e.g. 95" >&2 \
+cosm_ver=; [ -z "$cosm_ver" ] \
+	&& echo "Set cosm_ver, COSMIC version number, e.g. 95, 101" >&2 \
+	&& return 1
+
+cosm_muts=; [ -z "$cosm_muts" ] \
+	&& echo "Set cosm_muts, e.g. coding, noncoding, all" >&2 \
 	&& return 1
 
 fasta_fn=; [ -z "$fasta_fn" ] \
@@ -240,7 +244,8 @@ to extract specific steps to execute :smile:.
 TO_workflow -c $nthreads -f $fasta_fn -g $genome \
 	-d $cosm_dir -e $cosm_ver -h $hts_dir -k $gatk_dir \
 	-n $nbams -o $out_dir -s $stk2_dir -t $tbam \
-	-v $vep_dir -r $vep_rel -a $vep_cache
+	-v $vep_dir -r $vep_rel -a $vep_cache \
+	--cosm_muts <coding,noncoding,all>
 
 ```
 
