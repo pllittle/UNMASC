@@ -1,5 +1,27 @@
 
 # Segmentation functions
+
+#' @title BAF_EM_VAF
+#' @description Clusters integer read counts to model mixtures of
+#'	noise distributions, binomial vs beta-binomial distributions, 
+#'	over-dispersion.
+#' @param MAT A numeric matrix of alternate (AD) and reference (RD) read counts
+#'	in addition to pre-calculated total read depth DP = (AD + RD), 
+#'	log-transformed binomial coefficient (LBC), log-transformed total 
+#'	read depth (log_DP).
+#' @param binom Boolean set to true by default to model the mixture distribution
+#'	assuming binomial distribution. Otherwise set to false to explore beta-binomial
+#'	and binomial models.
+#' @param show_dots Boolean set to true by default to visualize 
+#'	computational runtime.
+#' @param clust_tVAF Boolean but set to null to indicate clustering 
+#'	normal read counts represented by modeling a mixture of noise and/or 
+#'	VAF cluster centered around 0.5. Otherwise when set to true, the function
+#'	models the mixture by noise, cluster at 0.5, clusters p and 1-p for copy-altered 
+#'	genomic segments.
+#' @export
+#' @return A list of clustered parameter estimates and 
+#'	posterior probabilities for inferring classification.
 BAF_EM_VAF = function(MAT,binom=TRUE,show_dots=TRUE,clust_tVAF=NULL){
 	if(FALSE){
 		MAT = as.matrix(sub_data[,c("AD","RD","DP","LBC","log_DP")])
